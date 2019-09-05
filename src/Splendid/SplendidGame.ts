@@ -47,11 +47,11 @@ export const SplendidGame = Game<GameState, Moves>({
     ],
     availableTokens: {
       Wild: 7,
-      Gold: 5,
-      Blue: 5,
-      Silver: 5,
-      Red: 5,
-      Black: 5
+      Emerald: 5,
+      Onyx: 5,
+      Ruby: 5,
+      Sapphire: 5,
+      Diamond: 5
     },
     players: [
       {

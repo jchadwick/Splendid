@@ -7,16 +7,26 @@ interface GameActionHandler {
 }
 
 export const moves: { [key: string]: GameActionHandler } = {
-  collectMultipleResources(G, ctx, id) {
-    console.log(`[collectMultipleResources]`);
+  collectMultipleResources(G, ctx, resources) {
+    console.log(
+      `[collectMultipleResources] Player ${
+        ctx.currentPlayer
+      } takes ${resources.join(", ")}`
+    );
   },
-  collectSingleResource(G, ctx, id) {
-    console.log(`[collectSingleResource]`);
+  collectSingleResource(G, ctx, resource) {
+    console.log(
+      `[collectSingleResource] Player ${ctx.currentPlayer} takes 2 ${resource}`
+    );
   },
-  reserveDevelopmentCard(G, ctx, id) {
-    console.log(`[reserveDevelopmentCard]`);
+  reserveDevelopmentCard(G, ctx, card) {
+    console.log(
+      `[reserveDevelopmentCard] Player ${ctx.currentPlayer} takes Card #${card.id}`
+    );
   },
-  purchaseDevelopmentCard(G, ctx, id) {
-    console.log(`[purchaseDevelopmentCard]`);
+  purchaseDevelopmentCard(G, ctx, card) {
+    console.log(
+      `[purchaseDevelopmentCard] Player ${ctx.currentPlayer} takes Card #${card.id}`
+    );
   }
 };

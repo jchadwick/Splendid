@@ -43,7 +43,7 @@ export const MainBoard: React.FC<GameComponentProps> = props => {
 
   const classes = useStyles(props);
 
-  const { availableCards } = G;
+  const { availableCards, availableTokens } = G;
 
   const onResourceSelected = (type: ResourceType) => {
     G.currentPlayerTokens = G.currentPlayerTokens || [];
@@ -95,7 +95,11 @@ export const MainBoard: React.FC<GameComponentProps> = props => {
                     />
                   </Grid>
                   <Grid item xs={2}>
-                    <TokensSection onResourceSelected={onResourceSelected} />
+                    <TokensSection
+                      tokens={availableTokens}
+                      canSelectResource={() => true}
+                      onResourceSelected={onResourceSelected}
+                    />
                   </Grid>
                 </Grid>
               </Paper>

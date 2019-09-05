@@ -1,5 +1,5 @@
 import React from "react";
-import * as Model from "./model";
+import { ResourceType, ResourceCount, AllResourceTypes } from "./model";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
 import { Box } from "@material-ui/core";
 import { ResourceColors } from "./ResourceColors";
@@ -14,39 +14,60 @@ const useTokenStyles = makeStyles(() =>
       width: 80,
       height: 80,
       margin: "10px auto",
-      cursor: "pointer"
+      cursor: ({ canSelect }: TokenProps) =>
+        canSelect ? "pointer" : "not-allowed",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      fontSize: "120%",
+      fontWeight: 600,
+      color: "#FFF"
     }
   })
 );
 
 interface TokenProps {
-  resourceType: Model.ResourceType;
-  onResourceSelected?(type: Model.ResourceType): void;
+  count: number;
+  resourceType: ResourceType;
+  canSelect: boolean;
+  onResourceSelected?(type: ResourceType): void;
 }
 
 export const TokenStack: React.FC<TokenProps> = props => {
-  const { resourceType, onResourceSelected } = props;
+  const { canSelect, count, resourceType, onResourceSelected } = props;
   const styles = useTokenStyles(props);
   return (
     <div
-      onClick={() => onResourceSelected(resourceType)}
+      onClick={() => canSelect && onResourceSelected(resourceType)}
       className={styles.token}
     >
-      [{resourceType}]
+      {count}
     </div>
   );
 };
 
-export const TokensSection: React.FC<{
-  onResourceSelected?(type: Model.ResourceType): void;
-}> = ({ onResourceSelected }) => (
-  <Box display="flex" flexDirection="column">
+interface TokensSectionProps {
+  direction?: "row" | "column";
+  tokens: ResourceCount;
+  canSelectResource(type: ResourceType): boolean;
+  onResourceSelected?(type: ResourceType): void;
+}
+
+export const TokensSection: React.FC<TokensSectionProps> = ({
+  canSelectResource,
+  direction = "column",
+  tokens,
+  onResourceSelected
+}) => (
+  <Box display="flex" flexDirection={direction}>
     <Box>
-      {Model.NativeResourceTypes.map(type => (
+      {AllResourceTypes.map(type => (
         <TokenStack
           key={type.toString()}
+          count={tokens[type] || 0}
+          canSelect={canSelectResource(type)}
           onResourceSelected={onResourceSelected}
-          resourceType={Model.ResourceType[type]}
+          resourceType={ResourceType[type]}
         />
       ))}
     </Box>
