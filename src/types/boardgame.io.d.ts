@@ -76,7 +76,6 @@ declare module "boardgame.io/core" {
   }
   interface IGameCtx {
     phase?: string;
-    playerID?: string;
     numPlayers: number;
     turn: number;
     currentPlayer: string;
@@ -91,7 +90,7 @@ declare module "boardgame.io/core" {
   }
 
   interface IGameMoves<TGameState> {
-    [key: string]: (G: TGameState, ctx: IGameCtx, ...args: any[]) => any;
+    [key: string]: (G: TGameState, ctx?: IGameCtx, ...args: any[]) => any;
   }
 
   interface IActionPlayers<TGameState> {
@@ -145,18 +144,19 @@ declare module "boardgame.io/core" {
     phases?: IGameFlowPhases<TGameState>;
     turnOrder?: ITurnOrder;
   }
-  interface IGameArgs<TGameState> {
+  interface IGameArgs<TGameState, TMoves extends IGameMoves<TGameState>> {
     name?: string;
     setup: (initialState: Partial<TGameState> & Partial<IGameCtx>) => any;
-    moves: IGameMoves;
+    moves: TMoves;
     playerView?: (G: TGameState, ctx: IGameCtx, playerID: string) => any;
-    flow?: IGameFlow;
+    flow?: IGameFlow<TGameState>;
     seed?: string;
   }
 
-  export function Game<TGameState = any>(
-    gameArgs: IGameArgs<TGameState>
-  ): GameObj;
+  export function Game<
+    TGameState = any,
+    TMoves extends IGameMoves<TGameState> = any
+  >(gameArgs: IGameArgs<TGameState, TMoves>): GameObj;
 
   export const INVALID_MOVE: string;
 
@@ -193,20 +193,28 @@ declare module "boardgame.io/react" {
   }
   interface IClientArgs {
     game: any;
-    numPlayer?: number;
+    numPlayers?: number;
     board?: React.ReactNode;
-    multiplayer?: boolean;
+    multiplayer?: boolean | { local: boolean } | { server: string };
     debug?: boolean;
     enhancer?: any;
   }
+
+  interface ClientProps {
+    playerID?: string;
+  }
+
   export function Client(
     clientArgs: IClientArgs
-  ): React.ComponentType & WrapperBoard;
+  ): React.ComponentType<ClientProps> & WrapperBoard;
 
-  export interface IBoardProps<TGameState = any> {
+  export interface IBoardProps<
+    TGameState = any,
+    TMoves extends IGameMoves<TGameState> = any
+  > {
     G: TGameState;
     ctx: IGameCtx;
-    moves: { [key: string]: (...args) => void };
+    moves: TMoves;
     playerID: string;
     gameArgs?: IGameArgs;
     credentials?: any;

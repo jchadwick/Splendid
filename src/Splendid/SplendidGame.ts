@@ -1,8 +1,8 @@
 import { Game } from "boardgame.io/core";
 import { GameState, ResourceType, DevelopmentCard } from "./model";
-import { moves } from "./GameMoves";
+import { moves, Moves } from "./GameMoves";
 
-export const SplendidGame = Game<GameState>({
+export const SplendidGame = Game<GameState, Moves>({
   setup: () => ({
     availableCards: [
       ...Array(3)

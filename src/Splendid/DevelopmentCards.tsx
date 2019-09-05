@@ -1,14 +1,6 @@
 import React from "react";
 import * as Model from "./model";
-import {
-  Grid,
-  Card,
-  Box,
-  Paper,
-  makeStyles,
-  createStyles
-} from "@material-ui/core";
-import { ResourceColors } from "./ResourceColors";
+import { Grid, Card, Box, makeStyles } from "@material-ui/core";
 
 interface DevelopmentCardsSectionProps extends OnDevelopmentCardSelected {
   levels: Model.DevelopmentCardRow[];
@@ -17,7 +9,7 @@ interface DevelopmentCardsSectionProps extends OnDevelopmentCardSelected {
 export const DevelopmentCardsSection: React.FC<
   DevelopmentCardsSectionProps
 > = ({ levels, onDevelopmentCardSelected }) => (
-  <Grid container xs={12} spacing={2}>
+  <Grid container spacing={2}>
     {levels.map(x => (
       <DevelopmentCardRow
         key={`Level${x.level}`}
@@ -40,7 +32,7 @@ export const DevelopmentCardRow: React.FC<DevelopmentCardRowProps> = ({
   row: { level, stock, visibleCards },
   onDevelopmentCardSelected
 }) => (
-  <Grid item xs={12} spacing={2}>
+  <Grid item xs={12}>
     <Box display="flex" flexDirection="row">
       <Card className={useCardStyle({}).card}>
         <h2>LEVEL {level}</h2>

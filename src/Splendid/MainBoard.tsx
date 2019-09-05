@@ -83,7 +83,7 @@ export const MainBoard: React.FC<GameComponentProps> = props => {
             </Paper>
           </Grid>
 
-          <Grid container xs={12} spacing={2}>
+          <Grid container spacing={2}>
             <Grid item xs={9}>
               <Paper style={{ flexGrow: 1 }} className={classes.paper}>
                 <Grid container>
@@ -94,13 +94,13 @@ export const MainBoard: React.FC<GameComponentProps> = props => {
                       onDevelopmentCardSelected={onDevelopmentCardSelected}
                     />
                   </Grid>
-                  <Grid item xs={2} justify="center">
+                  <Grid item xs={2}>
                     <TokensSection onResourceSelected={onResourceSelected} />
                   </Grid>
                 </Grid>
               </Paper>
             </Grid>
-            <Grid item xs={3} justify="center">
+            <Grid item xs={3}>
               <Paper className={classes.paper}>
                 <PlayersPanel />
               </Paper>

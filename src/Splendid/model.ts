@@ -16,7 +16,7 @@ export enum ResourceType {
 export type ResourceTypes = keyof typeof ResourceType;
 
 export const NativeResourceTypes = Object.freeze(
-  Object.keys(ResourceType).filter(x => x != ResourceType.Wild)
+  Object.keys(ResourceType).filter(x => x !== ResourceType.Wild)
 );
 
 export type ResourceCount = { [key in ResourceTypes]?: number | undefined };

@@ -1,7 +1,7 @@
 import React from "react";
 import * as Model from "./model";
-import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
-import { Grid, Box } from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/core/styles";
+import { Box } from "@material-ui/core";
 import { ResourceColors } from "./ResourceColors";
 
 const useTokenStyles = makeStyles(() =>
@@ -40,10 +40,11 @@ export const TokenStack: React.FC<TokenProps> = props => {
 export const TokensSection: React.FC<{
   onResourceSelected?(type: Model.ResourceType): void;
 }> = ({ onResourceSelected }) => (
-  <Box flex flexDirection="column">
+  <Box display="flex" flexDirection="column">
     <Box>
       {Model.NativeResourceTypes.map(type => (
         <TokenStack
+          key={type.toString()}
           onResourceSelected={onResourceSelected}
           resourceType={Model.ResourceType[type]}
         />
