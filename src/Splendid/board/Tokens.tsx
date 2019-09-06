@@ -10,10 +10,10 @@ const useTokenStyles = makeStyles(() =>
       backgroundColor: ({ resourceType }: TokenProps) =>
         ResourceColors[resourceType],
       border: "1px solid #333",
-      borderRadius: 40,
-      width: 80,
-      height: 80,
-      margin: "10px auto",
+      borderRadius: 35,
+      width: 70,
+      height: 70,
+      margin: "5px auto",
       cursor: ({ canSelect }: TokenProps) =>
         canSelect ? "pointer" : "not-allowed",
       display: "flex",
@@ -60,16 +60,14 @@ export const TokensSection: React.FC<TokensSectionProps> = ({
   onResourceSelected
 }) => (
   <Box display="flex" flexDirection={direction}>
-    <Box>
-      {AllResourceTypes.map(type => (
-        <TokenStack
-          key={type.toString()}
-          count={tokens[type] || 0}
-          canSelect={canSelectResource(type)}
-          onResourceSelected={onResourceSelected}
-          resourceType={ResourceType[type]}
-        />
-      ))}
-    </Box>
+    {AllResourceTypes.map(type => (
+      <TokenStack
+        key={type.toString()}
+        count={(tokens || {})[type] || 0}
+        canSelect={canSelectResource(type)}
+        onResourceSelected={onResourceSelected}
+        resourceType={ResourceType[type]}
+      />
+    ))}
   </Box>
 );

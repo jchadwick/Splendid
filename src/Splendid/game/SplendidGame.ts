@@ -56,7 +56,18 @@ export const SplendidGame = Game<GameState, Moves>({
     players: [
       {
         id: "0",
-        name: "Jess",
+        name: "Player 1",
+        isHuman: false,
+        patrons: [],
+        playedCards: [],
+        tokens: {},
+        prestigePoints: 0,
+        reservedCards: [],
+        totalResources: {}
+      },
+      {
+        id: "1",
+        name: "Player 2",
         isHuman: false,
         patrons: [],
         playedCards: [],

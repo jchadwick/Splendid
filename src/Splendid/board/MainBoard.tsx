@@ -1,8 +1,8 @@
 import React from "react";
 import { Moves } from "../game/GameMoves";
-import { ResourceType, DevelopmentCard, GameState } from "../model";
+import { ResourceType, DevelopmentCard, GameState, Player } from "../model";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
-import { Grid, Paper, Typography, Container } from "@material-ui/core";
+import { Grid, Paper, Typography, Container, Box } from "@material-ui/core";
 import { DevelopmentCardsSection } from "./DevelopmentCards";
 import { TokensSection } from "./Tokens";
 import { IBoardProps } from "boardgame.io/react";
@@ -34,12 +34,14 @@ export const MainBoard: React.FC<IBoardProps<GameState, Moves>> = props => {
       collectSingleResource,
       purchaseDevelopmentCard,
       reserveDevelopmentCard
-    }
+    },
+    playerID
   } = props;
 
   const classes = useStyles(props);
 
   const { availableCards, availableTokens } = G;
+  const player = G.players.find(x => x.id === playerID);
 
   const onResourceSelected = (type: ResourceType) => {
     G.currentPlayerTokens = G.currentPlayerTokens || [];
@@ -89,7 +91,7 @@ export const MainBoard: React.FC<IBoardProps<GameState, Moves>> = props => {
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <Paper className={classes.paper}>
-              <Typography variant="h1" component="h2">
+              <Typography variant="h2" component="h2">
                 JSS DEMO
               </Typography>
             </Paper>
@@ -124,7 +126,7 @@ export const MainBoard: React.FC<IBoardProps<GameState, Moves>> = props => {
           </Grid>
           <Grid item xs={12}>
             <Paper className={classes.paper}>
-              <InventorySection />
+              <InventorySection player={player} />
             </Paper>
           </Grid>
         </Grid>
@@ -135,4 +137,19 @@ export const MainBoard: React.FC<IBoardProps<GameState, Moves>> = props => {
 
 const PlayersPanel: React.FC = () => <div>PLAYER INFO]</div>;
 const PatronsSection: React.FC = () => <div>[PATRONS]</div>;
-const InventorySection: React.FC = () => <div>[INVENTORY]</div>;
+
+interface InventorySectionProps {
+  player: Player;
+}
+const InventorySection: React.FC<InventorySectionProps> = ({ player }) => (
+  <Box display="flex" flexDirection="row">
+    <Box>[Cards]</Box>
+    <Box>
+      <TokensSection
+        direction="row"
+        canSelectResource={() => false}
+        tokens={player && player.tokens}
+      />
+    </Box>
+  </Box>
+);
