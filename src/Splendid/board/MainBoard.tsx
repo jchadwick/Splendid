@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { Moves } from "./GameMoves";
-import { ResourceType, DevelopmentCard, GameState } from "./model";
+import React from "react";
+import { Moves } from "../game/GameMoves";
+import { ResourceType, DevelopmentCard, GameState } from "../model";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import { Grid, Paper, Typography, Container } from "@material-ui/core";
 import { DevelopmentCardsSection } from "./DevelopmentCards";
@@ -25,11 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const canAffordCard = (playerId: string, card: DevelopmentCard) =>
   card && card.resourceType === ResourceType.Diamond;
 
-export interface GameComponentProps extends IBoardProps<GameState> {
-  moves: Moves;
-}
-
-export const MainBoard: React.FC<GameComponentProps> = props => {
+export const MainBoard: React.FC<IBoardProps<GameState, Moves>> = props => {
   const {
     G,
     ctx,
@@ -49,16 +45,32 @@ export const MainBoard: React.FC<GameComponentProps> = props => {
     G.currentPlayerTokens = G.currentPlayerTokens || [];
     const selectedTokens = G.currentPlayerTokens;
 
-    if (selectedTokens.indexOf(type) > -1) {
-      collectSingleResource(type);
-      selectedTokens.splice(0, selectedTokens.length);
-      return;
-    } else if (selectedTokens.length === 2) {
-      collectMultipleResources(selectedTokens);
+    // has the token been selected already?
+    const duplicateToken = selectedTokens.indexOf(type) > -1;
+
+    if (duplicateToken) {
+      // if this is the second token being taken,
+      // then take it as a single resource
+      if (selectedTokens.length === 1) {
+        collectSingleResource(type);
+        selectedTokens.splice(0, selectedTokens.length);
+        return;
+      } else {
+        // otherwise it's an invalid move so ignore it
+        console.warn("Ignoring duplicate token");
+        return;
+      }
+    }
+
+    // if this is the third (unique) token selected,
+    // call the collect multiple resource action
+    if (selectedTokens.length === 2) {
+      collectMultipleResources([...selectedTokens, type]);
       selectedTokens.splice(0, selectedTokens.length);
       return;
     }
 
+    // no?  then just add it to the collection
     selectedTokens.push(type);
   };
 

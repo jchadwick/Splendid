@@ -1,5 +1,5 @@
 import { Game } from "boardgame.io/core";
-import { GameState, ResourceType, DevelopmentCard } from "./model";
+import { GameState, ResourceType, DevelopmentCard } from "../model";
 import { moves, Moves } from "./GameMoves";
 
 export const SplendidGame = Game<GameState, Moves>({

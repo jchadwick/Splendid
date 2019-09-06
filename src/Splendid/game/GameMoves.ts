@@ -1,4 +1,4 @@
-import { GameContext, GameState } from "./model";
+import { GameContext, GameState } from "../model";
 
 export type Moves = { [key in keyof typeof moves]: (...args) => void };
 

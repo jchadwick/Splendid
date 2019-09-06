@@ -1,9 +1,9 @@
-import { SplendidGame } from "./SplendidGame";
-import { MainBoard } from "./MainBoard";
+import game from "./game";
+import board from "./board";
 import ai from "./ai";
 
 export default {
-  game: SplendidGame,
-  board: MainBoard,
+  game,
+  board,
   ai
 };
