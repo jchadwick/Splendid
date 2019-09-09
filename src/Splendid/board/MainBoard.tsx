@@ -34,13 +34,13 @@ export const MainBoard: React.FC<IBoardProps<GameState, Moves>> = props => {
       collectSingleResource,
       purchaseDevelopmentCard,
       reserveDevelopmentCard
-    },
-    playerID
+    }
   } = props;
 
   const classes = useStyles(props);
 
   const { availableCards, availableTokens } = G;
+  const { currentPlayer: playerID } = ctx;
   const player = G.players.find(x => x.id === playerID);
 
   const onResourceSelected = (type: ResourceType) => {
@@ -111,7 +111,9 @@ export const MainBoard: React.FC<IBoardProps<GameState, Moves>> = props => {
                   <Grid item xs={2}>
                     <TokensSection
                       tokens={availableTokens}
-                      canSelectResource={() => true}
+                      canSelectResource={type =>
+                        availableTokens[type] > 0 && type !== ResourceType.Wild
+                      }
                       onResourceSelected={onResourceSelected}
                     />
                   </Grid>

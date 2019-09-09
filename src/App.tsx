@@ -10,4 +10,4 @@ const [_, playerID] = [
 
 console.debug(`Player ID: ${playerID}`);
 
-export default () => <GameClient playerID={playerID || "0"} />;
+export default () => <GameClient />;
