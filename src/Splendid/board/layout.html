@@ -1,0 +1,420 @@
+<style>
+  #container {
+    color: #000;
+    background-color: #fff;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    width: 100%;
+    height: 100vh;
+    display: grid;
+    grid-column-gap: 5px;
+    grid-row-gap: 5px;
+    grid-template-columns: auto 25%;
+    grid-template-rows: 5% auto 10%;
+    grid-template-areas:
+      "header header"
+      "main  player-list"
+      "footer footer";
+  }
+
+  #header {
+    grid-area: header;
+    font-size: 200%;
+    font-weight: 900;
+    padding: 0.2rem 2rem;
+  }
+
+  #main {
+    grid-area: main;
+    padding: 0 1rem 0.5rem;
+  }
+  #player-list {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    grid-area: player-list;
+    background-color: #fff;
+    padding: 0.4em;
+  }
+  #footer {
+    grid-area: footer;
+  }
+
+  .valid-action {
+    cursor: grab;
+  }
+
+  [itemprop][value]:after {
+    content: attr(value);
+  }
+
+  [itemprop="token"] {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-weight: 500;
+  }
+
+  [itemprop="resource"] {
+    border: 1px solid black;
+    border-radius: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1em;
+    height: 1em;
+    padding: 0.1em;
+  }
+
+  [itemprop="resource"][value="Diamond"] {
+    background-color: bisque;
+  }
+  [itemprop="resource"][value="Diamond"]:after {
+    content: "\2126";
+  }
+
+  [itemprop="resource"][value="Emerald"] {
+    background-color: greenyellow;
+  }
+  [itemprop="resource"][value="Emerald"]:after {
+    content: "\2600";
+  }
+
+  [itemprop="resource"][value="Sapphire"] {
+    background-color: lightskyblue;
+    color: #fff;
+  }
+  [itemprop="resource"][value="Sapphire"]:after {
+    content: "\271C";
+  }
+
+  [itemprop="resource"][value="Onyx"] {
+    background-color: black;
+    color: #fff;
+  }
+  [itemprop="resource"][value="Onyx"]:after {
+    content: "\2726";
+  }
+
+  [itemprop="resource"][value="Wild"] {
+    background: rgb(34, 193, 195);
+    background: radial-gradient(
+      circle,
+      rgba(34, 193, 195, 1) 20%,
+      rgba(44, 157, 63, 1) 40%,
+      rgba(238, 42, 96, 1) 60%,
+      rgba(27, 28, 26, 1) 80%
+    );
+    color: #fff;
+  }
+  [itemprop="resource"][value="Wild"]:after {
+    content: "\2738";
+  }
+
+  .cardRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 25%;
+  }
+
+  .card {
+    position: relative;
+    background-color: #e0f3f7;
+    border: 2px solid black;
+    border-radius: 8px;
+    color: #000;
+    width: 100%;
+    margin: 0.3rem;
+  }
+
+  .card > [itemprop="prestigePoints"] {
+    position: absolute;
+    top: 0.3em;
+    left: 1em;
+    font-weight: 500;
+    font-size: 150%;
+  }
+
+  .card > [itemprop="resource"] {
+    position: absolute;
+    top: 0.3em;
+    right: 0.3em;
+    font-weight: 500;
+    font-size: 150%;
+  }
+
+  .card [itemprop="cost"] {
+    position: absolute;
+    left: 0.3em;
+    bottom: 0.3em;
+    width: calc(100% - 0.5em);
+    height: 5em;
+    display: flex;
+    flex-direction: column-reverse;
+    font-size: 130%;
+  }
+
+  .stock {
+    background: no-repeat center/95% url(./stock_card.svg);
+    background-color: #fff;
+    color: lightgreen;
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 200%;
+  }
+
+  .patron.card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 5% 1%;
+    background-color: rgb(100, 136, 233);
+  }
+
+  .player {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #3f3f3f;
+    margin: 0.5em;
+    padding: 0.5em;
+  }
+
+  /* two players */
+  .player:first-child:nth-last-child(1),
+  .player:first-child:nth-last-child(1) ~ .player {
+    font-size: 120%;
+  }
+
+  /* three players */
+  .player:first-child:nth-last-child(2),
+  .player:first-child:nth-last-child(2) ~ .player {
+    font-size: 80%;
+  }
+
+  /* four players */
+  .player:first-child:nth-last-child(3),
+  .player:first-child:nth-last-child(3) ~ .player {
+    font-size: 75%;
+  }
+
+  .player .subtitle {
+    font-weight: bold;
+    margin: 1em 0 0.2em 0;
+    border-bottom: 1px solid #3c3c3c;
+    width: 100%;
+  }
+  .player .tokens {
+    display: inline-flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .player [itemprop="name"] {
+    font-weight: bold;
+    font-size: 150%;
+    font-style: italic;
+  }
+
+  .player [itemprop="token"] {
+    font-size: 140%;
+    margin: 0 0.5em;
+  }
+
+  .player [itemprop="token"] [itemprop="resource"] {
+    width: 2em;
+    height: 2em;
+    margin: 0.2em;
+  }
+
+  .player [itemprop="prestigePoints"] {
+    position: absolute;
+    top: 0.1em;
+    right: 0.3em;
+    font-size: 200%;
+    font-weight: 800;
+  }
+</style>
+
+<div id="container">
+  <div id="header">
+    <div class="title">Awesome Demo</div>
+  </div>
+  <div id="main">
+    <div class="cardRow">
+      <div class="patron card"><span>Patron</span></div>
+      <div class="patron card"><span>Patron</span></div>
+      <div class="patron card"><span>Patron</span></div>
+      <div class="patron card"><span>Patron</span></div>
+      <div class="patron card"><span>Patron</span></div>
+    </div>
+    <div class="cardRow">
+      <div class="stock card valid-action">
+        <span>20</span>
+      </div>
+      <div class="card valid-action"></div>
+      <div class="card valid-action"></div>
+      <div class="card valid-action"></div>
+      <div class="card valid-action"></div>
+    </div>
+    <div class="cardRow">
+      <div class="stock card valid-action"><span>20</span></div>
+      <div class="card valid-action" itemprop="card">
+        <div itemprop="resource" value="Diamond"></div>
+        <div itemprop="prestigePoints" value="1"></div>
+        <div itemprop="cost">
+          <div itemprop="token">
+            <div itemprop="resource" value="Diamond"></div>
+            <div itemprop="count" value="2"></div>
+          </div>
+        </div>
+      </div>
+      <div class="card valid-action"></div>
+      <div class="card valid-action"></div>
+      <div class="card valid-action"></div>
+    </div>
+    <div class="cardRow">
+      <div class="stock card"><span>20</span></div>
+      <div class="card valid-action"></div>
+      <div class="card valid-action"></div>
+      <div class="card valid-action"></div>
+      <div class="card valid-action"></div>
+    </div>
+  </div>
+  <div id="player-list">
+    <div class="player" itemscope itemtype="urn:x:player" itemid="3">
+      <div itemprop="name">Player 1</div>
+      <div class="inventory">
+        <div itemprop="inventory">
+          <div class="cards">
+            <div class="subtitle">Cards</div>
+            <div itemprop="card">
+              <div itemprop="resource" value="Diamond"></div>
+              <div itemprop="prestigePoints" value="1"></div>
+              <div itemprop="cost">
+                <div itemprop="token">
+                  <div itemprop="resource" value="Diamond"></div>
+                  <div itemprop="count" value="2"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tokens">
+            <div class="subtitle">Tokens</div>
+            <div itemprop="token">
+              <div itemprop="resource" value="Diamond"></div>
+              <div itemprop="count" value="2"></div>
+            </div>
+            <div itemprop="token">
+              <div itemprop="resource" value="Emerald"></div>
+              <div itemprop="count" value="3"></div>
+            </div>
+            <div itemprop="token">
+              <div itemprop="resource" value="Sapphire"></div>
+              <div itemprop="count" value="1"></div>
+            </div>
+            <div itemprop="token">
+              <div itemprop="resource" value="Onyx"></div>
+              <div itemprop="count" value="2"></div>
+            </div>
+            <div itemprop="token">
+              <div itemprop="resource" value="Wild"></div>
+              <div itemprop="count" value="2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="player" itemscope itemtype="urn:x:player" itemid="3">
+      <div itemprop="name">Player 2</div>
+      <div class="inventory">
+        <div itemprop="inventory">
+          <div class="cards">
+            <div class="subtitle">Cards</div>
+            <div itemprop="card">
+              <div itemprop="resource" value="Diamond"></div>
+              <div itemprop="prestigePoints" value="1"></div>
+              <div itemprop="cost">
+                <div itemprop="token">
+                  <div itemprop="resource" value="Diamond"></div>
+                  <div itemprop="count" value="2"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tokens">
+            <div class="subtitle">Tokens</div>
+            <div itemprop="token">
+              <div itemprop="resource" value="Diamond"></div>
+              <div itemprop="count" value="2"></div>
+            </div>
+            <div itemprop="token">
+              <div itemprop="resource" value="Emerald"></div>
+              <div itemprop="count" value="3"></div>
+            </div>
+            <div itemprop="token">
+              <div itemprop="resource" value="Sapphire"></div>
+              <div itemprop="count" value="1"></div>
+            </div>
+            <div itemprop="token">
+              <div itemprop="resource" value="Onyx"></div>
+              <div itemprop="count" value="2"></div>
+            </div>
+            <div itemprop="token">
+              <div itemprop="resource" value="Wild"></div>
+              <div itemprop="count" value="2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="player" itemscope itemtype="urn:x:player" itemid="3">
+      <div itemprop="name">Player 3</div>
+      <div class="inventory">
+        <div itemprop="inventory">
+          <div class="cards">
+            <div class="subtitle">Cards</div>
+            <div itemprop="card">
+              <div itemprop="resource" value="Diamond"></div>
+              <div itemprop="prestigePoints" value="1"></div>
+              <div itemprop="cost">
+                <div itemprop="token">
+                  <div itemprop="resource" value="Diamond"></div>
+                  <div itemprop="count" value="2"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tokens">
+            <div class="subtitle">Tokens</div>
+            <div itemprop="token">
+              <div itemprop="resource" value="Diamond"></div>
+              <div itemprop="count" value="2"></div>
+            </div>
+            <div itemprop="token">
+              <div itemprop="resource" value="Emerald"></div>
+              <div itemprop="count" value="3"></div>
+            </div>
+            <div itemprop="token">
+              <div itemprop="resource" value="Sapphire"></div>
+              <div itemprop="count" value="1"></div>
+            </div>
+            <div itemprop="token">
+              <div itemprop="resource" value="Onyx"></div>
+              <div itemprop="count" value="2"></div>
+            </div>
+            <div itemprop="token">
+              <div itemprop="resource" value="Wild"></div>
+              <div itemprop="count" value="2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="footer">footer</div>
+</div>
