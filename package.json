@@ -3,18 +3,25 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@material-ui/core": "^4.4.0",
+    "@material-ui/core": "^4.4.1",
+    "@material-ui/icons": "^4.4.1",
     "@types/jest": "24.0.18",
     "@types/node": "12.7.4",
     "@types/react": "16.9.2",
     "@types/react-dom": "16.9.0",
     "boardgame.io": "^0.32.1",
+    "jest-expect-message": "^1.0.2",
+    "jest-in-case": "^1.0.2",
+    "mobx": "^5.13.0",
+    "mobx-react-lite": "^1.4.1",
+    "mobx-utils": "^5.4.1",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-scripts": "3.1.1",
     "typescript": "3.6.2"
   },
   "scripts": {
+    "compile": "tsc -p .",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -24,11 +31,7 @@
     "extends": "react-app"
   },
   "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
+    "production": [">0.2%", "not dead", "not op_mini all"],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
@@ -38,5 +41,8 @@
   "devDependencies": {
     "eslint-plugin-react-hooks": "^2.0.1",
     "prettier": "^1.18.2"
+  },
+  "jest": {
+    "setupFilesAfterEnv": ["jest-expect-message"]
   }
 }
