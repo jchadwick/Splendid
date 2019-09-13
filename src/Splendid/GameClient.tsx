@@ -7,7 +7,6 @@ import { observer } from "mobx-react-lite";
 import { GameSettings } from "./setup/GameSettingsStore";
 
 const GameClient = observer<{ settings: GameSettings }>(({ settings }) => {
-  debugger;
   const View = Client({
     game,
     board,

@@ -7,17 +7,49 @@ import { DevelopmentCardsSection } from "./DevelopmentCards";
 import { TokensSection } from "./Tokens";
 import { IBoardProps } from "boardgame.io/react";
 
+import "./board.css";
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      flexGrow: 1,
-      display: "flex",
-      height: "100vh"
+    container: {
+      color: "#000",
+      backgroundColor: "#fff",
+      fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+      width: "100%",
+      height: "100vh",
+      display: "grid",
+      gridColumnGap: 5,
+      gridRowGap: 5,
+      gridTemplateColumns: "auto 25%",
+      gridTemplateRows: "5% auto 10%",
+      gridTemplateAreas: `
+        "header header"
+        "main  player-list"
+        "footer footer"`
     },
-    paper: {
-      padding: theme.spacing(2),
-      textAlign: "center",
-      color: theme.palette.text.secondary
+
+    header: {
+      gridArea: "header",
+      fontSize: "200%",
+      fontWeight: 900,
+      padding: "0.2rem 2rem"
+    },
+
+    main: {
+      gridArea: "main",
+      padding: "0 1rem 0.5rem"
+    },
+
+    playerList: {
+      display: "flex",
+      flexDirection: "column",
+      alignContent: "center",
+      gridArea: "player-list",
+      backgroundColor: "#fff",
+      padding: "0.4em"
+    },
+    footer: {
+      gridArea: "footer"
     }
   })
 );
@@ -82,58 +114,206 @@ export const MainBoard: React.FC<IBoardProps<GameState, Moves>> = props => {
       : reserveDevelopmentCard(card);
 
   return (
-    <>
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-      />
-      <Container className={classes.root}>
-        <Grid container spacing={3}>
-          <Grid item xs={12}>
-            <Paper className={classes.paper}>
-              <Typography variant="h2" component="h2">
-                JSS DEMO
-              </Typography>
-            </Paper>
-          </Grid>
-
-          <Grid container spacing={2}>
-            <Grid item xs={9}>
-              <Paper style={{ flexGrow: 1 }} className={classes.paper}>
-                <Grid container>
-                  <Grid item xs={10}>
-                    <PatronsSection />
-                    <DevelopmentCardsSection
-                      levels={availableCards}
-                      onDevelopmentCardSelected={onDevelopmentCardSelected}
-                    />
-                  </Grid>
-                  <Grid item xs={2}>
-                    <TokensSection
-                      tokens={availableTokens}
-                      canSelectResource={type =>
-                        availableTokens[type] > 0 && type !== ResourceType.Wild
-                      }
-                      onResourceSelected={onResourceSelected}
-                    />
-                  </Grid>
-                </Grid>
-              </Paper>
-            </Grid>
-            <Grid item xs={3}>
-              <Paper className={classes.paper}>
-                <PlayersPanel />
-              </Paper>
-            </Grid>
-          </Grid>
-          <Grid item xs={12}>
-            <Paper className={classes.paper}>
-              <InventorySection player={player} />
-            </Paper>
-          </Grid>
-        </Grid>
-      </Container>
-    </>
+    <div id="container" className={classes.container}>
+      <div id="header" className={classes.header}>
+        <div className="title">Awesome Demo</div>
+      </div>
+      <div id="main" className={classes.main}>
+        <div className={`patron cardRow`}>
+          <div className="patron card">
+            <span>Patron</span>
+          </div>
+          <div className="patron card">
+            <span>Patron</span>
+          </div>
+          <div className="patron card">
+            <span>Patron</span>
+          </div>
+          <div className="patron card">
+            <span>Patron</span>
+          </div>
+          <div className="patron card">
+            <span>Patron</span>
+          </div>
+        </div>
+        {availableCards.map(row => (
+          <div className="cardRow">
+            <div className="stock card valid-action">
+              <span>{row.stock.length}</span>
+            </div>
+            {Array(4)
+              .fill(0)
+              .map(
+                (_, i) =>
+                  (row.visibleCards[i] ||
+                    ({
+                      cost: { cards: {}, tokens: {} }
+                    } as any)) as DevelopmentCard
+              )
+              .map((card, idx) => (
+                <div
+                  key={card.id || `${row.level}${idx}`}
+                  className={`card ${card.id ? "valid-action" : ""}`}
+                  itemProp="card"
+                >
+                  <div itemProp="resource" data-value={card.resourceType}></div>
+                  {card.prestigePoints > 0 && (
+                    <div
+                      itemProp="prestigePoints"
+                      data-value={card.prestigePoints}
+                    ></div>
+                  )}
+                  <div itemProp="cost">
+                    {Object.keys(card.cost.tokens).map(resource => (
+                      <div itemProp="token">
+                        <div itemProp="resource" data-value={resource}></div>
+                        <div
+                          itemProp="count"
+                          data-value={card.cost.tokens[resource]}
+                        ></div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+          </div>
+        ))}
+      </div>
+      <div id="player-list" className={classes.playerList}>
+        <div className="player" itemScope itemType="urn:x:player" itemID="3">
+          <div itemProp="name">Player 1</div>
+          <div className="inventory">
+            <div itemProp="inventory">
+              <div className="cards">
+                <div className="subtitle">Cards</div>
+                <div itemProp="card">
+                  <div itemProp="resource" data-value="Diamond"></div>
+                  <div itemProp="prestigePoints" data-value="1"></div>
+                  <div itemProp="cost">
+                    <div itemProp="token">
+                      <div itemProp="resource" data-value="Diamond"></div>
+                      <div itemProp="count" data-value="2"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="tokens">
+                <div className="subtitle">Tokens</div>
+                <div itemProp="token">
+                  <div itemProp="resource" data-value="Diamond"></div>
+                  <div itemProp="count" data-value="2"></div>
+                </div>
+                <div itemProp="token">
+                  <div itemProp="resource" data-value="Emerald"></div>
+                  <div itemProp="count" data-value="3"></div>
+                </div>
+                <div itemProp="token">
+                  <div itemProp="resource" data-value="Sapphire"></div>
+                  <div itemProp="count" data-value="1"></div>
+                </div>
+                <div itemProp="token">
+                  <div itemProp="resource" data-value="Onyx"></div>
+                  <div itemProp="count" data-value="2"></div>
+                </div>
+                <div itemProp="token">
+                  <div itemProp="resource" data-value="Wild"></div>
+                  <div itemProp="count" data-value="2"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="player" itemScope itemType="urn:x:player" itemID="3">
+          <div itemProp="name">Player 2</div>
+          <div className="inventory">
+            <div itemProp="inventory">
+              <div className="cards">
+                <div className="subtitle">Cards</div>
+                <div itemProp="card">
+                  <div itemProp="resource" data-value="Diamond"></div>
+                  <div itemProp="prestigePoints" data-value="1"></div>
+                  <div itemProp="cost">
+                    <div itemProp="token">
+                      <div itemProp="resource" data-value="Diamond"></div>
+                      <div itemProp="count" data-value="2"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="tokens">
+                <div className="subtitle">Tokens</div>
+                <div itemProp="token">
+                  <div itemProp="resource" data-value="Diamond"></div>
+                  <div itemProp="count" data-value="2"></div>
+                </div>
+                <div itemProp="token">
+                  <div itemProp="resource" data-value="Emerald"></div>
+                  <div itemProp="count" data-value="3"></div>
+                </div>
+                <div itemProp="token">
+                  <div itemProp="resource" data-value="Sapphire"></div>
+                  <div itemProp="count" data-value="1"></div>
+                </div>
+                <div itemProp="token">
+                  <div itemProp="resource" data-value="Onyx"></div>
+                  <div itemProp="count" data-value="2"></div>
+                </div>
+                <div itemProp="token">
+                  <div itemProp="resource" data-value="Wild"></div>
+                  <div itemProp="count" data-value="2"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="player" itemScope itemType="urn:x:player" itemID="3">
+          <div itemProp="name">Player 3</div>
+          <div className="inventory">
+            <div itemProp="inventory">
+              <div className="cards">
+                <div className="subtitle">Cards</div>
+                <div itemProp="card">
+                  <div itemProp="resource" data-value="Diamond"></div>
+                  <div itemProp="prestigePoints" data-value="1"></div>
+                  <div itemProp="cost">
+                    <div itemProp="token">
+                      <div itemProp="resource" data-value="Diamond"></div>
+                      <div itemProp="count" data-value="2"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="tokens">
+                <div className="subtitle">Tokens</div>
+                <div itemProp="token">
+                  <div itemProp="resource" data-value="Diamond"></div>
+                  <div itemProp="count" data-value="2"></div>
+                </div>
+                <div itemProp="token">
+                  <div itemProp="resource" data-value="Emerald"></div>
+                  <div itemProp="count" data-value="3"></div>
+                </div>
+                <div itemProp="token">
+                  <div itemProp="resource" data-value="Sapphire"></div>
+                  <div itemProp="count" data-value="1"></div>
+                </div>
+                <div itemProp="token">
+                  <div itemProp="resource" data-value="Onyx"></div>
+                  <div itemProp="count" data-value="2"></div>
+                </div>
+                <div itemProp="token">
+                  <div itemProp="resource" data-value="Wild"></div>
+                  <div itemProp="count" data-value="2"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="footer" className={classes.footer}>
+        footer
+      </div>
+    </div>
   );
 };
 

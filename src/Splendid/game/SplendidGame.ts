@@ -1,50 +1,49 @@
 import { Game } from "boardgame.io/core";
 import { GameState, ResourceType, DevelopmentCard } from "../model";
 import { moves, Moves } from "./GameMoves";
+import { importDeck } from "./deckGenerator";
+import { shuffle } from "./shuffle";
+
+const deck = importDeck();
+
+shuffle(deck);
+
+const availableCards = [
+  {
+    level: 3,
+    stock: deck.filter(x => x.level === 3),
+    visibleCards: Array(4).fill(null)
+  },
+  {
+    level: 2,
+    stock: deck.filter(x => x.level === 2),
+    visibleCards: Array(4).fill(null)
+  },
+  {
+    level: 1,
+    stock: deck.filter(x => x.level === 1),
+    visibleCards: Array(4).fill(null)
+  }
+];
+
+const populateVisibleCards = cardRows => {
+  cardRows.forEach(row => {
+    for (let x = 0; x < row.visibleCards.length; x++) {
+      console.log(
+        `stock: ${row.stock.length}; ${row.visibleCards.length}; ${x}`
+      );
+      if (row.stock.length !== 0) {
+        row.visibleCards[x] = row.stock.pop();
+      }
+    }
+  });
+};
+
+populateVisibleCards(availableCards);
 
 export const SplendidGame = Game<GameState, Moves>({
   setup: () => ({
-    availableCards: [
-      ...Array(3)
-        .fill(0)
-        .map((_, idx) => idx + 1)
-        .map(level => ({
-          level,
-          stock: [],
-          visibleCards: [
-            {
-              id: `${level}1`,
-              level,
-              resourceType: ResourceType.Diamond,
-              cost: { tokens: { Onyx: 1 } }
-            },
-            {
-              id: `${level}2`,
-              level,
-              resourceType: ResourceType.Emerald,
-              cost: { tokens: { Ruby: 1 } }
-            },
-            {
-              id: `${level}3`,
-              level,
-              resourceType: ResourceType.Onyx,
-              cost: { tokens: { Sapphire: 1 } }
-            },
-            {
-              id: `${level}4`,
-              level,
-              resourceType: ResourceType.Ruby,
-              cost: { tokens: { Diamond: 1 } }
-            },
-            {
-              id: `${level}5`,
-              level,
-              resourceType: ResourceType.Sapphire,
-              cost: { tokens: { Emerald: 1 } }
-            }
-          ] as DevelopmentCard[]
-        }))
-    ],
+    availableCards,
     availableTokens: {
       Wild: 7,
       Emerald: 5,

@@ -38,7 +38,17 @@ class AppState {
 
 const SplendidGame = observer(() => {
   const { view: View } = useLocalStore(() => new AppState());
-  return <View />;
+  //return <View />;
+  return (
+    <GameClient
+      settings={{
+        numberOfPlayers: 2,
+        musicVolume: 0,
+        sfxVolume: 0,
+        players: []
+      }}
+    />
+  );
 });
 SplendidGame.displayName = "SplendidGame";
 
