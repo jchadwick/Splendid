@@ -46,9 +46,6 @@ type DevelopmentCardDefinition = {
   [key in keyof Omit<DevelopmentCard, "id">]: string;
 };
 
-// export const importDeckFromAssets = async () =>
-//   importDeckFromFile(AssetsCsvFilePath);
-
 export const importDeck = () => {
   const definitions = [
     // matrix containing all variations of the placeholders coming first

@@ -1,0 +1,13 @@
+{
+  "folders": [
+	{
+		"path": "/Users/jess.chadwick/code/board"
+	},
+	{
+		"path": "/Users/jess.chadwick/code/Splendid"
+	}
+],
+  "settings": {
+    "liveServer.settings.multiRootWorkspaceName": "board"
+  }
+}
