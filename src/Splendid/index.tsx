@@ -1,7 +1,8 @@
+/* tslint:disable */
 import React from "react";
 import GameClient from "./GameClient";
 import GameSetup from "./setup";
-import { useLocalStore, observer } from "mobx-react-lite";
+import { observer } from "mobx-react-lite";
 import { GameSettings } from "./setup/GameSettingsStore";
 import { observable, action, toJS } from "mobx";
 
@@ -37,8 +38,6 @@ class AppState {
 }
 
 const SplendidGame = observer(() => {
-  const { view: View } = useLocalStore(() => new AppState());
-  //return <View />;
   return (
     <GameClient
       settings={{

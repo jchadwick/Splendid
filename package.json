@@ -11,11 +11,11 @@
     "@types/react-dom": "16.9.0",
     "boardgame.io": "^0.32.1",
     "csvtojson": "^2.0.10",
-    "jest-expect-message": "^1.0.2",
     "jest-in-case": "^1.0.2",
     "mobx": "^5.13.0",
     "mobx-react-lite": "^1.4.1",
     "mobx-utils": "^5.4.1",
+    "pluralize": "^8.0.0",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-scripts": "3.1.1",
@@ -32,11 +32,7 @@
     "extends": "react-app"
   },
   "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
+    "production": [">0.2%", "not dead", "not op_mini all"],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
@@ -44,8 +40,13 @@
     ]
   },
   "devDependencies": {
+    "@types/jest-expect-message": "^1.0.0",
     "csv-loader": "^3.0.2",
     "eslint-plugin-react-hooks": "^2.0.1",
+    "jest-expect-message": "^1.0.2",
     "prettier": "^1.18.2"
+  },
+  "jest": {
+    "setupFilesAfterEnv": ["jest-expect-message"]
   }
 }

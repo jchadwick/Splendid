@@ -1,5 +1,5 @@
 import { Game } from "boardgame.io/core";
-import { GameState, ResourceType, DevelopmentCard } from "../model";
+import { GameState } from "../model";
 import { moves, Moves } from "./GameMoves";
 import { importDeck } from "./deckGenerator";
 import { shuffle } from "./shuffle";
