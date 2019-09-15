@@ -28,7 +28,7 @@ const availableCards = [
 const populateVisibleCards = cardRows => {
   cardRows.forEach(row => {
     for (let x = 0; x < row.visibleCards.length; x++) {
-      if (row.stock.length !== 0) {
+      if (row.visibleCards[x] == null && row.stock.length !== 0) {
         row.visibleCards[x] = row.stock.pop();
       }
     }
@@ -78,6 +78,13 @@ export const SplendidGame = Game<GameState, Moves>({
 
   flow: {
     movesPerTurn: 1,
+    onTurnBegin: (G, ctx) => {
+      G.currentPlayer = G.players.find(x => x.id === ctx.currentPlayer);
+    },
+    onTurnEnd: (G, ctx) => {
+      // TODO: evaluate patrons
+      populateVisibleCards(G.availableCards);
+    },
     endGameIf: G => {
       const winners = G.players.filter(x => x.prestigePoints >= 15);
 

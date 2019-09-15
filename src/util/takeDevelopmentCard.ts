@@ -9,13 +9,28 @@ export const takeDevelopmentCard = (
   }
 
   for (let row of state.availableCards) {
-    const index = row.visibleCards.findIndex(x => x && x.id === card.id);
+    const matchesCardId = (x: DevelopmentCard) => x && x.id === card.id;
 
-    if (index > -1) {
-      row.visibleCards.splice(index, 1, row.stock.pop());
+    const topStockCard = row.stock[row.stock.length - 1];
+    const isStockCard = matchesCardId(topStockCard);
+
+    const visibleCardIndex = row.visibleCards.findIndex(matchesCardId);
+    const isVisibleCard = visibleCardIndex > -1;
+
+    if (isStockCard) {
+      row.stock.pop();
+      state.currentPlayer.reservedCards.push(card);
+      return;
+    } else if (isVisibleCard) {
+      row.visibleCards[visibleCardIndex] = null;
+      state.currentPlayer.reservedCards.push(card);
       return;
     }
   }
 
-  throw new Error(`Couldn't find card ${JSON.stringify(card)}`);
+  throw new Error(
+    `Couldn't find card ${JSON.stringify(
+      card
+    )} in top card of stock piles or visible cards`
+  );
 };
