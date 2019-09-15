@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { Moves } from "../game/GameMoves";
-import { DevelopmentCard, GameState } from "../../Model";
+import { DevelopmentCard, GameState, ResourceType } from "../../Model";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
 import { IBoardProps } from "boardgame.io/react";
 
@@ -58,6 +58,39 @@ export const MainBoard: React.FC<IBoardProps<GameState, Moves>> = props => {
 
   const { availableCards } = G;
 
+  const [selectedTokens, setSelectedTokens] = useState([]);
+
+  const selectToken = useCallback(
+    token => {
+      if (token === ResourceType.Wild) {
+        console.debug(`Ignoring invalid selection of a wild token`);
+        return;
+      }
+
+      let newSelectedTokens = selectedTokens;
+
+      if (selectedTokens.indexOf(token) > -1) {
+        if (selectedTokens.length === 1) {
+          moves.collectSingleResource(token);
+          newSelectedTokens = [];
+        } else {
+          console.debug(`Ignoring invalid duplicate selection of ${token}`);
+        }
+      } else {
+        newSelectedTokens = [...selectedTokens, token];
+      }
+
+      if (newSelectedTokens.length === 3) {
+        moves.collectMultipleResources(newSelectedTokens);
+        newSelectedTokens = [];
+      }
+
+      console.log(`selected tokens: ${newSelectedTokens.join(", ")}`);
+      setSelectedTokens(newSelectedTokens);
+    },
+    [selectedTokens]
+  );
+
   return (
     <div id="container" className={classes.container}>
       <div id="header" className={classes.header}>
@@ -105,6 +138,7 @@ export const MainBoard: React.FC<IBoardProps<GameState, Moves>> = props => {
                   key={card.id || `${row.level}${idx}`}
                   className={`card ${card.id ? "valid-action" : ""}`}
                   itemProp="card"
+                  onClick={() => moves.reserveDevelopmentCard(card)}
                 >
                   <div itemProp="resource" data-value={card.resourceType}></div>
                   {card.prestigePoints > 0 && (
@@ -128,6 +162,19 @@ export const MainBoard: React.FC<IBoardProps<GameState, Moves>> = props => {
               ))}
           </div>
         ))}
+        <div className="tokens">
+          <div className="subtitle">Tokens</div>
+          {Object.keys(G.availableTokens).map(token => (
+            <div
+              key={token}
+              itemProp="token"
+              onClick={() => selectToken(token)}
+            >
+              <div itemProp="resource" data-value={token}></div>
+              <div itemProp="count" data-value={G.availableTokens[token]}></div>
+            </div>
+          ))}
+        </div>
       </div>
       <div id="player-list" className={classes.playerList}>
         <div className="player" itemScope itemType="urn:x:player" itemID="3">
