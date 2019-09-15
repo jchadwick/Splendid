@@ -8,6 +8,7 @@ import {
   simulateActionScenario
 } from "./simulateActionScenario";
 import { calculateScenarioScore } from "./calculateScenarioScore";
+import { getAvailableActions } from "../util";
 
 interface SimulatedActionScenarioResult {
   action: PlayerActionCommand;
@@ -18,7 +19,7 @@ interface SimulatedActionScenarioResult {
 export const selectAIPlayerAction = async (
   gameState: RunningState
 ): Promise<PlayerActionCommand> => {
-  const actions = gameState.availableActions();
+  const actions = getAvailableActions(gameState);
 
   const simulations = await Promise.all(
     actions.map(

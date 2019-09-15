@@ -93,13 +93,6 @@ export class RunningState extends GameState implements GameStateContract {
     }
   }
 
-  readonly availableActions = (): PlayerActionCommand[] =>
-    this.gameOver
-      ? []
-      : Commands.flatMap(x => x.getAvailableActions(this)).filter(
-          x => x != null
-        );
-
   initialize(settings: GameInstanceSettings) {
     if (!settings) {
       throw new Error("No settings provided");

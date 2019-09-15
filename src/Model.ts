@@ -69,6 +69,7 @@ export interface DevelopmentCardRow {
 }
 
 export interface GameState {
+  gameOver: boolean;
   availableCards: DevelopmentCardRow[];
   availableTokens: ResourceCount;
   players: Player[];
