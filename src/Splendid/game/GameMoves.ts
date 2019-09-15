@@ -12,35 +12,32 @@ interface GameActionHandler {
   (G: GameState, ctx: GameContext, ...args): any;
 }
 
+const executeCommand = (
+  state: GameState,
+  ctx: GameContext,
+  CommandType,
+  args?
+) => {
+  console.log(
+    `Player ${ctx.currentPlayer} executes ${
+      CommandType.name
+    } with ${JSON.stringify(args)}`
+  );
+  const cmd = new CommandType(args);
+  cmd.execute(state);
+};
+
 export const moves: { [key: string]: GameActionHandler } = {
   collectMultipleResources(G, ctx, resources) {
-    console.log(
-      `[collectMultipleResources] Player ${
-        ctx.currentPlayer
-      } takes ${resources.join(", ")}`
-    );
-    const cmd = new CollectMultipleResourcesCommand({ resources });
-    cmd.execute(G);
+    executeCommand(G, ctx, CollectMultipleResourcesCommand, { resources });
   },
   collectSingleResource(G, ctx, resource) {
-    console.log(
-      `[collectSingleResource] Player ${ctx.currentPlayer} takes 2 ${resource}`
-    );
-    const cmd = new CollectSingleResourceCommand({ resource });
-    cmd.execute(G);
+    executeCommand(G, ctx, CollectSingleResourceCommand, { resource });
   },
   reserveDevelopmentCard(G, ctx, card) {
-    console.log(
-      `[reserveDevelopmentCard] Player ${ctx.currentPlayer} takes Card #${card.id}`
-    );
-    const cmd = new ReserveDevelopmentCardCommand({ card });
-    cmd.execute(G);
+    executeCommand(G, ctx, ReserveDevelopmentCardCommand, { card });
   },
   purchaseDevelopmentCard(G, ctx, card) {
-    console.log(
-      `[purchaseDevelopmentCard] Player ${ctx.currentPlayer} takes Card #${card.id}`
-    );
-    const cmd = new PurchaseDevelopmentCardCommand({ card });
-    cmd.execute(G);
+    executeCommand(G, ctx, PurchaseDevelopmentCardCommand, { card });
   }
 };
