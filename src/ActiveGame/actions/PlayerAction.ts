@@ -1,11 +1,11 @@
-import { RunningState } from "../RunningState";
+import { GameState } from "../../Model";
 
 export interface PlayerAction {}
 
 type PlayerActionCommandType = typeof PlayerActionCommand;
 
 export interface PlayerActionCommandStatic extends PlayerActionCommandType {
-  getAvailableActions(gameState: RunningState): PlayerActionCommand[];
+  getAvailableActions(gameState: GameState): PlayerActionCommand[];
 }
 
 export abstract class PlayerActionCommand<T = any> {
@@ -17,5 +17,5 @@ export abstract class PlayerActionCommand<T = any> {
   }
 
   constructor(public readonly action: T) {}
-  abstract execute(gameState: RunningState): RunningState;
+  abstract execute(gameState: GameState): GameState;
 }

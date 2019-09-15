@@ -1,6 +1,6 @@
-import { DevelopmentCard } from "../../Model";
+import { DevelopmentCard, GameState } from "../../Model";
 import { PlayerAction, PlayerActionCommand } from "./PlayerAction";
-import { RunningState } from "../RunningState";
+import { takeDevelopmentCard } from "../../util";
 
 export interface ReserveDevelopmentCard extends PlayerAction {
   card: DevelopmentCard;
@@ -9,7 +9,7 @@ export interface ReserveDevelopmentCard extends PlayerAction {
 export class ReserveDevelopmentCardCommand extends PlayerActionCommand<
   ReserveDevelopmentCard
 > {
-  execute(gameState: RunningState): RunningState {
+  execute(gameState: GameState): GameState {
     const card = this.action.card;
 
     if (card == null) {
@@ -28,12 +28,12 @@ export class ReserveDevelopmentCardCommand extends PlayerActionCommand<
     }
 
     // take the card off the table and add a new one in its place
-    gameState.takeDevelopmentCard(card);
+    takeDevelopmentCard(gameState, card);
 
     return gameState;
   }
 
-  static readonly getAvailableActions = (gameState: RunningState) =>
+  static readonly getAvailableActions = (gameState: GameState) =>
     gameState.availableCards
       .flatMap(x => x.visibleCards)
       .filter(x => x != null)

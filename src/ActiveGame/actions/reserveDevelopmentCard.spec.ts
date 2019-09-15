@@ -1,12 +1,12 @@
 import { DevelopmentCard, Player } from "../../Model";
-import { RunningState } from "../RunningState";
+import { GameState } from "../../Model";
 import { ReserveDevelopmentCardCommand } from "./reserveDevelopmentCard";
 import { generateRunningGameState } from "../../mockData";
 
 describe("Actions > reserveDevelopmentCard", () => {
   let player: Player;
   let cardToReserve: DevelopmentCard;
-  let gameState: RunningState;
+  let gameState: GameState;
 
   beforeEach(async () => {
     gameState = await generateRunningGameState();

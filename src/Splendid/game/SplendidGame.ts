@@ -1,8 +1,7 @@
 import { Game } from "boardgame.io/core";
-import { GameState } from "../model";
+import { GameState } from "../../Model";
 import { moves, Moves } from "./GameMoves";
-import { importDeck } from "./deckGenerator";
-import { shuffle } from "./shuffle";
+import { importDeck, shuffle } from "../../util";
 
 const deck = importDeck();
 

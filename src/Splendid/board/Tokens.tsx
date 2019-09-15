@@ -1,5 +1,5 @@
 import React from "react";
-import { ResourceType, ResourceCount, AllResourceTypes } from "../model";
+import { ResourceType, ResourceCount, AllResourceTypes } from "../../Model";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
 import { Box } from "@material-ui/core";
 import { ResourceColors } from "./ResourceColors";

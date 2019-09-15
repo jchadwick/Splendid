@@ -1,6 +1,6 @@
 import React from "react";
 import { Moves } from "../game/GameMoves";
-import { DevelopmentCard, GameState } from "../model";
+import { DevelopmentCard, GameState } from "../../Model";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
 import { IBoardProps } from "boardgame.io/react";
 

@@ -1,10 +1,10 @@
-import { importDeckFromAssets } from "./util/deckGenerator";
+import { importDeck } from "./util/deckGenerator";
 import { RunningState } from "./ActiveGame/RunningState";
 import { GameInstanceSettings } from "./StateContracts";
 import { Player, ResourceCount, NativeResourceTypes } from "./Model";
 import { times, createResourceCollection, clone } from "./utils";
 
-const deckImportJob = importDeckFromAssets();
+const deckImportJob = importDeck();
 
 export const generateDevelopmentCards = async () => clone(await deckImportJob);
 

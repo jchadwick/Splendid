@@ -1,3 +1,9 @@
+export interface GameContext {
+  allowedMoves: [];
+  currentPlayer;
+  turn: number;
+}
+
 export enum ResourceType {
   Wild = "Wild",
   Emerald = "Emerald",
@@ -9,8 +15,14 @@ export enum ResourceType {
 
 export type ResourceTypes = keyof typeof ResourceType;
 
+export const AllResourceTypes: ResourceType[] = Object.freeze(
+  Object.keys(ResourceType)
+    .filter(x => typeof x === "string")
+    .map(x => ResourceType[x] as ResourceType)
+) as ResourceType[];
+
 export const NativeResourceTypes = Object.freeze(
-  Object.keys(ResourceType).filter(x => x != ResourceType.Wild)
+  Object.keys(ResourceType).filter(x => x !== ResourceType.Wild)
 );
 
 export type ResourceCount = { [key in ResourceTypes]?: number | undefined };
@@ -39,6 +51,7 @@ export interface Patron {
 }
 
 export interface Player {
+  id: string;
   name: string;
   isHuman: boolean;
   patrons: Patron[];
@@ -47,4 +60,17 @@ export interface Player {
   tokens: ResourceCount;
   prestigePoints: number;
   totalResources: ResourceTotals;
+}
+
+export interface DevelopmentCardRow {
+  level: number;
+  stock: DevelopmentCard[];
+  visibleCards: DevelopmentCard[];
+}
+
+export interface GameState {
+  availableCards: DevelopmentCardRow[];
+  availableTokens: ResourceCount;
+  players: Player[];
+  currentPlayer: Player;
 }

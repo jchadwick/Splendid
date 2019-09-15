@@ -1,5 +1,5 @@
 import { PlayerActionCommand } from "./actions/PlayerAction";
-import { RunningState } from "./RunningState";
+import { GameState } from "../Model";
 import {
   CollectMultipleResourcesCommand,
   CollectSingleResourceCommand,
@@ -8,9 +8,10 @@ import {
 } from "./actions";
 import pluralize from "pluralize";
 import { EndedState } from "../EndGame/EndedState";
+import { recalculatePlayerTotals } from "utils";
 
 export class GameLog {
-  actionTaken(command: PlayerActionCommand, gameState: RunningState) {
+  actionTaken(command: PlayerActionCommand, gameState: GameState) {
     const playerName = gameState.currentPlayer.name;
     if (command instanceof CollectMultipleResourcesCommand) {
       console.log(
@@ -39,9 +40,10 @@ export class GameLog {
     }
   }
 
-  turnSummary(state: RunningState) {
-    state.recalculatePlayerTotals();
+  turnSummary(state: GameState) {
     const player = state.currentPlayer;
+
+    recalculatePlayerTotals(player);
 
     console.log(
       `  Player: ${player.name} | Points: ${
@@ -52,8 +54,8 @@ export class GameLog {
     );
   }
 
-  roundSummary(gameState: RunningState) {
-    const lead = ` ROUND ${gameState.round} `.padStart(3).padEnd(81);
+  roundSummary(gameState: GameState) {
+    const lead = ` ROUND START `.padStart(3).padEnd(81);
     const header = ` Player `.padEnd(20) + `Score`;
     const divider = "".padEnd(81, "-");
 

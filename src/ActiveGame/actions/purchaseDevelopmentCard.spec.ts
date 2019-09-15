@@ -1,13 +1,13 @@
 import { PurchaseDevelopmentCardCommand } from "./purchaseDevelopmentCard";
 import { DevelopmentCard, Player } from "../../Model";
-import { RunningState } from "../RunningState";
+import { GameState } from "../../Model";
 import { generateRunningGameState } from "../../mockData";
 import { recalculatePlayerTotals } from "../../utils";
 
 describe("Actions > PurchaseDevelopmentCard", () => {
   let player: Player;
   let cardToPurchase: DevelopmentCard;
-  let gameState: RunningState;
+  let gameState: GameState;
 
   beforeEach(async () => {
     gameState = await generateRunningGameState();

@@ -3,7 +3,10 @@ import {
   RunningState
 } from "../ActiveGame/RunningState";
 import { PlayerActionCommand } from "../ActiveGame/actions/PlayerAction";
-import { simulateActionScenario } from "./simulateActionScenario";
+import {
+  cloneGameState,
+  simulateActionScenario
+} from "./simulateActionScenario";
 import { calculateScenarioScore } from "./calculateScenarioScore";
 
 interface SimulatedActionScenarioResult {
@@ -22,7 +25,7 @@ export const selectAIPlayerAction = async (
       action =>
         new Promise<SimulatedActionScenarioResult>(done => {
           const result = simulateActionScenario(
-            RunningState.simulate(gameState),
+            cloneGameState(gameState),
             action
           );
           done({ action, result, score: calculateScenarioScore(result) });

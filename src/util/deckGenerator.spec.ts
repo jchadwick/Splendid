@@ -1,10 +1,5 @@
-import {
-  generateDeck,
-  importDeckFromFile,
-  AssetsCsvFilePath,
-  importDeckFromAssets
-} from "./deckGenerator";
-import { ResourceType, NativeResourceTypes } from "../Model";
+import { generateDeck } from "./deckGenerator";
+import { ResourceType } from "../Model";
 
 describe("Deck Generator", () => {
   it("should generate a deck from card definitions", async () => {
@@ -37,22 +32,5 @@ describe("Deck Generator", () => {
     });
     expect(deck[1].resourceType).toBe(ResourceType.Ruby);
     expect(deck[1].prestigePoints).toBe(1);
-  });
-
-  describe("importDeckFromAssets", () => {
-    it("should import development cards from ./assets/Cards.csv", async () => {
-      let csvRowCount = -1; /* start at -1 to exclude the header from the count */
-
-      require("readline")
-        .createInterface({
-          input: require("fs").createReadStream(AssetsCsvFilePath)
-        })
-        .on("line", line => (csvRowCount += line ? 1 : 0)); // ignore blank lines
-
-      const deck = await importDeckFromAssets();
-      expect(deck && deck.length).toBe(
-        csvRowCount * NativeResourceTypes.length
-      );
-    });
   });
 });

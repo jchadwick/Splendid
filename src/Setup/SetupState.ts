@@ -5,7 +5,7 @@ import {
   GameInstanceSettings
 } from "../StateContracts";
 import { ResourceCount, NativeResourceTypes } from "../Model";
-import { importDeckFromAssets } from "../util/deckGenerator";
+import { importDeck } from "../util/deckGenerator";
 
 const DefaultGameSettings: GameSettings = Object.freeze({
   maxPlayerCount: 4,
@@ -68,7 +68,7 @@ export class SetupState extends GameState {
       }, {})
     };
 
-    const developmentCards = await importDeckFromAssets();
+    const developmentCards = importDeck();
 
     return {
       developmentCards,

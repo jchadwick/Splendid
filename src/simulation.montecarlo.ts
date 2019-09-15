@@ -1,13 +1,10 @@
-import { MonteCarlo, simulateActionScenario } from "./ai";
+import { MonteCarlo, cloneGameState, simulateActionScenario } from "./ai";
 import { generateRunningGameState } from "./mockData";
-import {
-  RunningState,
-  RunningStateSimulation
-} from "./ActiveGame/RunningState";
+import { RunningStateSimulation } from "./ActiveGame/RunningState";
 import { PlayerActionCommand } from "./ActiveGame/actions/PlayerAction";
 
 (async function simulation() {
-  const state = RunningState.simulate(await generateRunningGameState());
+  const state = cloneGameState(await generateRunningGameState());
 
   const mcts = new MonteCarlo<RunningStateSimulation, PlayerActionCommand>({
     legalPlays: (state: RunningStateSimulation) => state.availableActions(),

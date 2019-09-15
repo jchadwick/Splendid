@@ -1,4 +1,3 @@
-import csvReader from "csvtojson";
 import {
   DevelopmentCard,
   ResourceType,
@@ -6,24 +5,48 @@ import {
   NativeResourceTypes
 } from "../Model";
 
-export const AssetsCsvFilePath = require("path").resolve("./assets/Cards.csv");
+/*
+    CSV file contains the definitions for ONE color,
+    so use this as a blueprint to loop through all the colors
+  */
+const blueprints = `
+1,E,{A} & {B} & {B},0
+1,E,{A} & {A} & {C} & {C},0
+1,E,{C} & {C} & {C},0
+1,E,{A} & {B} & {C} & {D},0
+1,E,{A} & {C} & {C} & {D} & {D},0
+1,E,{A} & {B} & {C} & {D} & {D},0
+1,E,{D} & {D} & {D} & {D},1
+
+2,E,{D} & {D} & {D} & {A} & {A} & {B} & {B}, 1
+2,E,{E} & {E} & {C} & {C} & {C} & {B} & {B} & {B}, 1
+2,E,{B} & {B} & {B} & {B} & {D} & {A} & {A}, 2
+2,E,{B} & {B} & {B} & {B} & {B}, 2
+2,E,{B} & {B} & {B} & {B} & {B} & {A} & {A} & {A}, 2
+2,E,{E} & {E} & {E} & {E} & {E} & {E}, 3
+
+3,E,{C} & {C} & {C} & {D} & {D} & {D} & {A} & {A} & {A} & {B} & {B} & {B} & {B} & {B},3
+3,E,{A} & {A} & {A} & {A} & {A} & {A} & {A},4
+3,E,{A} & {A} & {A} & {A} & {A} & {A} & {E} & {E} & {E} & {B} & {B} & {B},4
+3,E,{A} & {A} & {A} & {A} & {A} & {A} & {A} & {E} & {E} & {E},5`
+  .split(/\n/)
+  .filter(line => line && line.length)
+  .map(line => line.split(","))
+  .map(
+    ([level, resourceType, cost, prestigePoints]) =>
+      ({
+        level,
+        resourceType,
+        cost,
+        prestigePoints
+      } as DevelopmentCardDefinition)
+  );
 
 type DevelopmentCardDefinition = {
   [key in keyof Omit<DevelopmentCard, "id">]: string;
 };
 
-export const importDeckFromAssets = async () =>
-  importDeckFromFile(AssetsCsvFilePath);
-
-export const importDeckFromFile = async (path: string) => {
-  /*
-    CSV file contains the definitions for ONE color,
-    so use this as a blueprint to loop through all the colors
-  */
-  const blueprints: DevelopmentCardDefinition[] = await csvReader().fromFile(
-    path
-  );
-
+export const importDeck = () => {
   const definitions = [
     // matrix containing all variations of the placeholders coming first
     ["A", "B", "C", "D", "E"],
@@ -65,13 +88,13 @@ const replacePlaceholders = (source, placeholders, replacements) =>
   placeholders.reduce(
     (replaced, placeholder) =>
       replaced.replace(
-        new RegExp(`\{${placeholder}\}`, "g"),
+        new RegExp(`{${placeholder}}`, "g"),
         replacements[placeholder]
       ),
     source
   );
 
-export const generateDeck = async (definitions: DevelopmentCardDefinition[]) =>
+export const generateDeck = (definitions: DevelopmentCardDefinition[]) =>
   definitions.filter(isValidDefinition).map(toDevelopmentCard);
 
 const isValidDefinition = (definition: DevelopmentCardDefinition) =>

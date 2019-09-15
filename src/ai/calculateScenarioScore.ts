@@ -1,5 +1,4 @@
-import { RunningState } from "../ActiveGame/RunningState";
-import { NativeResourceTypes } from "../Model";
+import { GameState, NativeResourceTypes } from "../Model";
 
 const TOKEN_MULTIPLIER = 1;
 const WILD_MULTIPLIER = 3;
@@ -7,7 +6,7 @@ const CARD_MULTIPLIER = 5;
 const PATRON_MULTIPLER = 20;
 const POINT_MULTIPLIER = 50;
 
-export const calculateScenarioScore = (state: RunningState): number => {
+export const calculateScenarioScore = (state: GameState): number => {
   if (!state.currentPlayer) {
     throw Error("THERE IS NO CURRENT PLAYER - THIS SHOULD NEVER HAPPEN!");
   }

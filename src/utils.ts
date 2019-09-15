@@ -6,7 +6,8 @@ import {
   ResourceTypes,
   NativeResourceTypes,
   DevelopmentCard,
-  Player
+  Player,
+  GameState
 } from "./Model";
 
 export const deduct = (
@@ -232,9 +233,16 @@ export const calculatePlayerPrestigePoints = ({
     0
   );
 
-export const recalculatePlayerTotals = (player: Player): void => {
-  player.totalResources = calculatePlayerResourceTotals(player);
-  player.prestigePoints = calculatePlayerPrestigePoints(player);
+export const recalculatePlayerTotals = (
+  playerOrState: Player | GameState
+): void => {
+  if ("id" in playerOrState) {
+    const player = playerOrState;
+    player.totalResources = calculatePlayerResourceTotals(player);
+    player.prestigePoints = calculatePlayerPrestigePoints(player);
+  } else {
+    playerOrState.players.forEach(recalculatePlayerTotals);
+  }
 };
 
 export const clone = <T>(source: T): T => JSON.parse(JSON.stringify(source));

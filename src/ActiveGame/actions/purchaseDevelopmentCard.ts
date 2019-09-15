@@ -1,4 +1,4 @@
-import { DevelopmentCard } from "../../Model";
+import { DevelopmentCard, GameState } from "../../Model";
 import {
   hasRequiredResources,
   calculatePayment,
@@ -7,7 +7,7 @@ import {
   calculatePlayerResourceTotals
 } from "../../utils";
 import { PlayerAction, PlayerActionCommand } from "./PlayerAction";
-import { RunningState } from "../RunningState";
+import { takeDevelopmentCard } from "../../util";
 
 export interface PurchaseDevelopmentCard extends PlayerAction {
   card: DevelopmentCard;
@@ -21,7 +21,7 @@ export class PurchaseDevelopmentCardCommand extends PlayerActionCommand<
 
   static readonly UNAVAILABLE_CARD = "Card is not available to play";
 
-  execute(gameState: RunningState) {
+  execute(gameState: GameState) {
     const card = this.action.card;
 
     if (card == null) {
@@ -59,7 +59,7 @@ export class PurchaseDevelopmentCardCommand extends PlayerActionCommand<
 
     // take it from the table
     if (isOnTable) {
-      gameState.takeDevelopmentCard(card);
+      takeDevelopmentCard(gameState, card);
     }
     // or take it from the player's hand
     else if (reservedCard) {
@@ -80,7 +80,7 @@ export class PurchaseDevelopmentCardCommand extends PlayerActionCommand<
     return gameState;
   }
 
-  static readonly getAvailableActions = (gameState: RunningState) =>
+  static readonly getAvailableActions = (gameState: GameState) =>
     [
       ...gameState.availableCards.flatMap(x => x.visibleCards),
       ...gameState.currentPlayer.reservedCards

@@ -1,6 +1,6 @@
 import { ResourceType, NativeResourceTypes } from "../../Model";
 import { PlayerActionCommand, PlayerAction } from "./PlayerAction";
-import { RunningState } from "../RunningState";
+import { GameState } from "../../Model";
 
 export interface CollectMultipleResources extends PlayerAction {
   resources: ResourceType[];
@@ -9,7 +9,7 @@ export interface CollectMultipleResources extends PlayerAction {
 export class CollectMultipleResourcesCommand extends PlayerActionCommand<
   CollectMultipleResources
 > {
-  execute(gameState: RunningState) {
+  execute(gameState: GameState) {
     for (let resource of this.action.resources) {
       gameState.availableTokens[resource] -= 1;
       gameState.currentPlayer.tokens[resource] += 1;
@@ -18,7 +18,7 @@ export class CollectMultipleResourcesCommand extends PlayerActionCommand<
     return gameState;
   }
 
-  static readonly getAvailableActions = (gameState: RunningState) => {
+  static readonly getAvailableActions = (gameState: GameState) => {
     const availableResources = NativeResourceTypes.filter(
       type => gameState.availableTokens[type] > 0
     ).map(x => ResourceType[x] as ResourceType);

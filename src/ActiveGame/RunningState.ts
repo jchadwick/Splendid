@@ -1,10 +1,15 @@
 import { GameInstanceSettings, GameState } from "../StateContracts";
-import { Player, ResourceCount, DevelopmentCard } from "../Model";
+import {
+  Player,
+  ResourceCount,
+  DevelopmentCard,
+  GameState as GameStateContract
+} from "../Model";
 import {
   createResourceCollection,
   mergeResources,
-  recalculatePlayerTotals,
-  clone
+  clone,
+  recalculatePlayerTotals
 } from "../utils";
 import { shuffle } from "../util";
 import { PlayerActionCommand } from "./actions/PlayerAction";
@@ -31,7 +36,7 @@ export interface RunningStateSimulation extends RunningState {
   isPlayer(id: string): boolean;
 }
 
-export class RunningState extends GameState {
+export class RunningState extends GameState implements GameStateContract {
   state: RunningStateState = {
     players: null,
     currentPlayer: null,
@@ -177,27 +182,6 @@ export class RunningState extends GameState {
     return { rankings };
   }
 
-  recalculatePlayerTotals() {
-    recalculatePlayerTotals(this.currentPlayer);
-  }
-
-  takeDevelopmentCard(card: DevelopmentCard) {
-    if (card == null) {
-      throw new Error("Can't take an empty card!");
-    }
-
-    for (let row of this.availableCards) {
-      const index = row.visibleCards.findIndex(x => x && x.id === card.id);
-
-      if (index > -1) {
-        row.visibleCards.splice(index, 1, row.stock.pop());
-        return;
-      }
-    }
-
-    throw new Error(`Couldn't find card ${JSON.stringify(card)}`);
-  }
-
   private populateVisibleCards() {
     this.state.availableCards.forEach(row => {
       while (
@@ -223,13 +207,13 @@ export class RunningState extends GameState {
   }
 
   beginTurn(): RunningState {
-    this.recalculatePlayerTotals();
+    recalculatePlayerTotals(this);
     this.populateVisibleCards();
     return this;
   }
 
   endTurn(): RunningState {
-    this.recalculatePlayerTotals();
+    recalculatePlayerTotals(this);
 
     const winner = this.players.find(
       x => x.prestigePoints >= this.state.settings.winningPoints
@@ -244,16 +228,4 @@ export class RunningState extends GameState {
 
     return this;
   }
-
-  static simulate = (
-    state: RunningState | RunningStateSimulation
-  ): RunningStateSimulation => {
-    const playerId =
-      "playerId" in state ? state.playerId : state.currentPlayer.name;
-
-    return Object.assign(new RunningState(clone(state.state)), {
-      playerId,
-      isPlayer: (id: string) => id === playerId
-    });
-  };
 }

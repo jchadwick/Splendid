@@ -1,5 +1,5 @@
 import React from "react";
-import * as Model from "../model";
+import * as Model from "../../Model";
 import { Grid, Card, Box, makeStyles } from "@material-ui/core";
 
 interface DevelopmentCardsSectionProps extends OnDevelopmentCardSelected {

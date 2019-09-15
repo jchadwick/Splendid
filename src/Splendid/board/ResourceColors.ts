@@ -1,4 +1,4 @@
-import { ResourceTypes } from "../model";
+import { ResourceTypes } from "../../Model";
 
 export const ResourceColors: { [key in ResourceTypes]: string } = {
   Emerald: "green",
