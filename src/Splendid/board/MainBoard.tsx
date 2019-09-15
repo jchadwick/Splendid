@@ -52,7 +52,7 @@ const useStyles = makeStyles(() =>
 );
 
 export const MainBoard: React.FC<IBoardProps<GameState, Moves>> = props => {
-  const { G } = props;
+  const { G, moves } = props;
 
   const classes = useStyles(props);
 
@@ -81,9 +81,14 @@ export const MainBoard: React.FC<IBoardProps<GameState, Moves>> = props => {
             <span>Patron</span>
           </div>
         </div>
-        {availableCards.map(row => (
-          <div className="cardRow">
-            <div className="stock card valid-action">
+        {availableCards.map((row, rowIndex) => (
+          <div key={String(rowIndex)} className="cardRow">
+            <div
+              className="stock card valid-action"
+              onClick={() =>
+                moves.reserveDevelopmentCard(row.stock[row.stock.length - 1])
+              }
+            >
               <span>{row.stock.length}</span>
             </div>
             {Array(4)
@@ -110,7 +115,7 @@ export const MainBoard: React.FC<IBoardProps<GameState, Moves>> = props => {
                   )}
                   <div itemProp="cost">
                     {Object.keys(card.cost.tokens).map(resource => (
-                      <div itemProp="token">
+                      <div key={resource} itemProp="token">
                         <div itemProp="resource" data-value={resource}></div>
                         <div
                           itemProp="count"

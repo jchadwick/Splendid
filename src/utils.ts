@@ -43,6 +43,7 @@ export const getGemCount = (
 
 export const createResourceCollection = (): ResourceCount =>
   Object.keys(ResourceType).reduce(
+    // tslint:disable-next-line
     (bag, color) => ((bag[color] = 0), bag),
     {} as ResourceCount
   );

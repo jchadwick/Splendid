@@ -28,9 +28,6 @@ const availableCards = [
 const populateVisibleCards = cardRows => {
   cardRows.forEach(row => {
     for (let x = 0; x < row.visibleCards.length; x++) {
-      console.log(
-        `stock: ${row.stock.length}; ${row.visibleCards.length}; ${x}`
-      );
       if (row.stock.length !== 0) {
         row.visibleCards[x] = row.stock.pop();
       }

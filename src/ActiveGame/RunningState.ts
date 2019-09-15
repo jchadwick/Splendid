@@ -12,8 +12,6 @@ import {
   recalculatePlayerTotals
 } from "../utils";
 import { shuffle } from "../util";
-import { PlayerActionCommand } from "./actions/PlayerAction";
-import { Commands } from "./actions";
 
 interface DevelopmentCardRow {
   level: number;
