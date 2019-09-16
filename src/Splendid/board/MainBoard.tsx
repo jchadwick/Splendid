@@ -20,20 +20,39 @@ const useStyles = makeStyles(() =>
       gridTemplateColumns: "auto 25%",
       gridTemplateRows: "5% auto 10%",
       gridTemplateAreas: `
-        "header header"
-        "main  player-list"
-        "footer footer"`
+        "tokens    player-list"
+        "board     player-list"
+        "inventory player-list"`
     },
 
-    header: {
-      gridArea: "header",
-      fontSize: "200%",
-      fontWeight: 900,
-      padding: "0.2rem 2rem"
+    tokens: {
+      gridArea: "tokens",
+      display: "flex",
+      alignContent: "center",
+      justifyContent: "space-around",
+
+      "& [itemProp='token']": {
+        display: "flex",
+        flexDirection: "column",
+        fontSize: "350%"
+      },
+
+      "& [itemProp='token'] [itemProp='resource']": {},
+
+      "& [itemProp='token'] [itemProp='count']": {
+        position: "absolute",
+        padding: ".4em",
+        fontSize: "60%",
+        fontWeight: 900
+      },
+
+      "& [itemprop='resource'][data-value='Onyx'] + [itemProp='count']": {
+        color: "#fff"
+      }
     },
 
-    main: {
-      gridArea: "main",
+    board: {
+      gridArea: "board",
       padding: "0 1rem 0.5rem"
     },
 
@@ -45,18 +64,18 @@ const useStyles = makeStyles(() =>
       backgroundColor: "#fff",
       padding: "0.4em"
     },
-    footer: {
-      gridArea: "footer"
+    inventory: {
+      gridArea: "inventory"
     }
   })
 );
 
 export const MainBoard: React.FC<IBoardProps<GameState, Moves>> = props => {
-  const { G, moves } = props;
-
+  const {
+    G: { availableCards, availableTokens },
+    moves
+  } = props;
   const classes = useStyles(props);
-
-  const { availableCards } = G;
 
   const [selectedTokens, setSelectedTokens] = useState([]);
 
@@ -88,15 +107,20 @@ export const MainBoard: React.FC<IBoardProps<GameState, Moves>> = props => {
       console.log(`selected tokens: ${newSelectedTokens.join(", ")}`);
       setSelectedTokens(newSelectedTokens);
     },
-    [selectedTokens]
+    [moves, selectedTokens]
   );
 
   return (
     <div id="container" className={classes.container}>
-      <div id="header" className={classes.header}>
-        <div className="title">Awesome Demo</div>
+      <div className={classes.tokens}>
+        {Object.keys(availableTokens).map(token => (
+          <div key={token} itemProp="token" onClick={() => selectToken(token)}>
+            <div itemProp="resource" data-value={token}></div>
+            <div itemProp="count" data-value={availableTokens[token]}></div>
+          </div>
+        ))}
       </div>
-      <div id="main" className={classes.main}>
+      <div id="board" className={classes.board}>
         <div className={`patron cardRow`}>
           <div className="patron card">
             <span>Patron</span>
@@ -162,19 +186,6 @@ export const MainBoard: React.FC<IBoardProps<GameState, Moves>> = props => {
               ))}
           </div>
         ))}
-        <div className="tokens">
-          <div className="subtitle">Tokens</div>
-          {Object.keys(G.availableTokens).map(token => (
-            <div
-              key={token}
-              itemProp="token"
-              onClick={() => selectToken(token)}
-            >
-              <div itemProp="resource" data-value={token}></div>
-              <div itemProp="count" data-value={G.availableTokens[token]}></div>
-            </div>
-          ))}
-        </div>
       </div>
       <div id="player-list" className={classes.playerList}>
         <div className="player" itemScope itemType="urn:x:player" itemID="3">
@@ -307,8 +318,8 @@ export const MainBoard: React.FC<IBoardProps<GameState, Moves>> = props => {
           </div>
         </div>
       </div>
-      <div id="footer" className={classes.footer}>
-        footer
+      <div id="inventory" className={classes.inventory}>
+        [PLAYER INVENTORY]
       </div>
     </div>
   );
