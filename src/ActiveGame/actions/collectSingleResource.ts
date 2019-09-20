@@ -10,8 +10,12 @@ export class CollectSingleResourceCommand extends PlayerActionCommand<
   CollectSingleResource
 > {
   execute(gameState: GameState) {
-    gameState.availableTokens[this.action.resource] -= 2;
-    gameState.currentPlayer.tokens[this.action.resource] += 2;
+    gameState.availableTokens[this.action.resource] =
+      (gameState.availableTokens[this.action.resource] || 0) - 2;
+
+    gameState.currentPlayer.tokens[this.action.resource] =
+      (gameState.currentPlayer.tokens[this.action.resource] || 0) + 2;
+
     return gameState;
   }
 
