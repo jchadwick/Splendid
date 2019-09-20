@@ -5,8 +5,6 @@ import { ReserveDevelopmentCardCommand } from "./reserveDevelopmentCard";
 import { PlayerActionCommand } from "./PlayerAction";
 import { GameContext, GameState } from "../../../Model";
 
-export type Moves = { [key in keyof typeof moves]: (...args) => void };
-
 interface GameActionHandler {
   (G: GameState, ctx: GameContext, ...args): GameState;
 }

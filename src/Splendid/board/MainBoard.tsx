@@ -1,10 +1,16 @@
 import React, { useCallback, useState } from "react";
 import { Moves } from "../game";
-import { DevelopmentCard, GameState, ResourceType, Player } from "../../Model";
+import {
+  DevelopmentCard as DevelopmentCardModel,
+  GameState,
+  ResourceType,
+  Player
+} from "../../Model";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
 import { IBoardProps } from "boardgame.io/react";
 
 import "./board.css";
+import { Box } from "@material-ui/core";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -76,31 +82,10 @@ export const MainBoard: React.FC<IBoardProps<GameState, Moves>> = props => {
     moves
   } = props;
 
-  const currentPlayer = players[currentPlayerId];
-
-  return (
-    <MainBoardView
-      {...{
-        availableCards,
-        availableTokens,
-        currentPlayer,
-        moves,
-        players
-      }}
-    />
-  );
-};
-
-export const MainBoardView = ({
-  availableCards,
-  availableTokens,
-  currentPlayer,
-  moves,
-  players
-}) => {
   const classes = useStyles({});
 
   const [selectedTokens, setSelectedTokens] = useState([]);
+  const currentPlayer = players[currentPlayerId];
   const userPlayer = currentPlayer;
 
   const selectToken = useCallback(
@@ -175,37 +160,14 @@ export const MainBoardView = ({
               .fill(0)
               .map(
                 (_, i) =>
-                  (row.visibleCards[i] ||
-                    ({
-                      cost: { cards: {}, tokens: {} }
-                    } as any)) as DevelopmentCard
+                  row.visibleCards[i] || ({ id: null } as DevelopmentCardModel)
               )
               .map((card, idx) => (
-                <div
+                <DevelopmentCard
                   key={card.id || `${row.level}${idx}`}
-                  className={`card ${card.id ? "valid-action" : ""}`}
-                  itemProp="card"
-                  onClick={() => moves.reserveDevelopmentCard(card)}
-                >
-                  <div itemProp="resource" data-value={card.resourceType}></div>
-                  {card.prestigePoints > 0 && (
-                    <div
-                      itemProp="prestigePoints"
-                      data-value={card.prestigePoints}
-                    ></div>
-                  )}
-                  <div itemProp="cost">
-                    {Object.keys(card.cost.tokens).map(resource => (
-                      <div key={resource} itemProp="token">
-                        <div itemProp="resource" data-value={resource}></div>
-                        <div
-                          itemProp="count"
-                          data-value={card.cost.tokens[resource]}
-                        ></div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                  card={card}
+                  onSelected={() => moves.reserveDevelopmentCard(card)}
+                />
               ))}
           </div>
         ))}
@@ -220,11 +182,41 @@ export const MainBoardView = ({
         ))}
       </div>
       <div id="inventory" className={classes.inventory}>
-        <UserPlayerInventory player={userPlayer} />
+        <UserPlayerInventory
+          player={userPlayer}
+          onPlayReservedCard={card => moves.purchaseDevelopmentCard(card)}
+        />
       </div>
     </div>
   );
 };
+
+const DevelopmentCard = ({
+  card,
+  onSelected
+}: {
+  card: DevelopmentCardModel;
+  onSelected(card: DevelopmentCardModel): void;
+}) => (
+  <div
+    className={`card ${card.id ? "valid-action" : ""}`}
+    itemProp="card"
+    onClick={() => onSelected(card)}
+  >
+    <div itemProp="resource" data-value={card.resourceType}></div>
+    {card.prestigePoints > 0 && (
+      <div itemProp="prestigePoints" data-value={card.prestigePoints}></div>
+    )}
+    <div itemProp="cost">
+      {Object.keys(card.cost.tokens).map(resource => (
+        <div key={resource} itemProp="token">
+          <div itemProp="resource" data-value={resource}></div>
+          <div itemProp="count" data-value={card.cost.tokens[resource]}></div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
 
 const PlayerOverview = ({
   isCurrentPlayer,
@@ -270,6 +262,20 @@ const PlayerInventory = ({ reservedCards, tokens }) => (
   </div>
 );
 
-const UserPlayerInventory = ({ player }: { player: Player }) => (
-  <div>[PLAYER INVENTORY]</div>
+const UserPlayerInventory = ({
+  player,
+  onPlayReservedCard
+}: {
+  player: Player;
+  onPlayReservedCard(card: DevelopmentCardModel): void;
+}) => (
+  <Box display="flex" flexDirection="row">
+    {player.reservedCards.map(card => (
+      <DevelopmentCard
+        key={card.id}
+        card={card}
+        onSelected={onPlayReservedCard}
+      />
+    ))}
+  </Box>
 );

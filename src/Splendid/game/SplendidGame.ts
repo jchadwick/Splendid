@@ -1,8 +1,10 @@
 import { Game } from "boardgame.io/core";
 import { GameState } from "../../Model";
-import moves, { Moves } from "./moves";
+import moves from "./moves";
 import { initializeGame as setup } from "./initializeGame";
 import { populateVisibleCards } from "../../util";
+
+export type Moves = { [key in keyof typeof moves]: (...args) => void };
 
 export const SplendidGame = Game<GameState, Moves>({
   setup,
