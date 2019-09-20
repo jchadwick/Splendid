@@ -1,7 +1,6 @@
 import { DevelopmentCard, GameState } from "../../Model";
 import { PlayerAction, PlayerActionCommand } from "./PlayerAction";
-import { takeDevelopmentCard } from "../../util";
-import { findCurrentPlayer } from "utils";
+import { findCurrentPlayer, takeDevelopmentCard } from "../../util";
 
 export interface ReserveDevelopmentCard extends PlayerAction {
   card: DevelopmentCard;

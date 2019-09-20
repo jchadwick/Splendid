@@ -1,8 +1,8 @@
 import { DevelopmentCard, Player } from "../../Model";
 import { GameState } from "../../Model";
 import { ReserveDevelopmentCardCommand } from "./reserveDevelopmentCard";
-import { generateRunningGameState } from "../../mockData";
-import { findCurrentPlayer } from "utils";
+import { generateGameState } from "../../mockData";
+import { findCurrentPlayer } from "../../util";
 
 describe("Actions > reserveDevelopmentCard", () => {
   let player: Player;
@@ -10,7 +10,7 @@ describe("Actions > reserveDevelopmentCard", () => {
   let state: GameState;
 
   beforeEach(async () => {
-    state = await generateRunningGameState();
+    state = await generateGameState();
     player = findCurrentPlayer(state);
     cardToReserve = state.availableCards[0].visibleCards[0];
   });

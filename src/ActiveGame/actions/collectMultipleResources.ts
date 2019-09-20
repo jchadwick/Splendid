@@ -1,7 +1,6 @@
-import { ResourceType, NativeResourceTypes } from "../../Model";
+import { GameState, ResourceType, NativeResourceTypes } from "../../Model";
 import { PlayerActionCommand, PlayerAction } from "./PlayerAction";
-import { GameState } from "../../Model";
-import { findCurrentPlayer } from "utils";
+import { findCurrentPlayer } from "../../util";
 
 export interface CollectMultipleResources extends PlayerAction {
   resources: ResourceType[];
@@ -34,8 +33,8 @@ export class CollectMultipleResourcesCommand extends PlayerActionCommand<
     let actions: [ResourceType, ResourceType, ResourceType][] = [];
 
     for (let x of availableResources) {
-      for (let y of availableResources.filter(n => n != x)) {
-        for (let z of availableResources.filter(n => n != x && n != y)) {
+      for (let y of availableResources.filter(n => n !== x)) {
+        for (let z of availableResources.filter(n => n !== x && n !== y)) {
           actions.push([x, y, z]);
         }
       }

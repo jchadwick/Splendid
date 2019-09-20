@@ -4,10 +4,10 @@ import {
   createResourceCollection,
   mergeResources,
   clone,
-  recalculatePlayerTotals,
-  findCurrentPlayer
-} from "../utils";
-import { shuffle, populateVisibleCards } from "../util";
+  findCurrentPlayer,
+  shuffle,
+  populateVisibleCards
+} from "../util";
 
 interface DevelopmentCardRow {
   level: number;

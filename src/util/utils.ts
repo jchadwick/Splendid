@@ -8,7 +8,7 @@ import {
   DevelopmentCard,
   Player,
   GameState
-} from "./Model";
+} from "../Model";
 
 export const deduct = (
   cost: ResourceCount,
@@ -43,7 +43,7 @@ export const getGemCount = (
 
 export const createResourceCollection = (): ResourceCount =>
   Object.keys(ResourceType).reduce(
-    // tslint:disable-next-line
+    // eslint-disable-next-line
     (bag, color) => ((bag[color] = 0), bag),
     {} as ResourceCount
   );

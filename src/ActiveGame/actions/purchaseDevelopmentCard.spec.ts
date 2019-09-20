@@ -1,8 +1,8 @@
 import { PurchaseDevelopmentCardCommand } from "./purchaseDevelopmentCard";
 import { DevelopmentCard, Player } from "../../Model";
 import { GameState } from "../../Model";
-import { generateRunningGameState } from "../../mockData";
-import { recalculatePlayerTotals, findCurrentPlayer } from "../../utils";
+import { generateGameState } from "../../mockData";
+import { recalculatePlayerTotals, findCurrentPlayer } from "../../util";
 
 describe("Actions > PurchaseDevelopmentCard", () => {
   let player: Player;
@@ -10,7 +10,7 @@ describe("Actions > PurchaseDevelopmentCard", () => {
   let state: GameState;
 
   beforeEach(async () => {
-    state = await generateRunningGameState();
+    state = await generateGameState();
     player = findCurrentPlayer(state);
     cardToPurchase = state.availableCards[0].visibleCards[0];
 

@@ -1,14 +1,14 @@
 import { DevelopmentCard, GameState } from "../../Model";
+import { PlayerAction, PlayerActionCommand } from "./PlayerAction";
 import {
   hasRequiredResources,
   calculatePayment,
   deduct,
   mergeResources,
   calculatePlayerResourceTotals,
-  findCurrentPlayer
-} from "../../utils";
-import { PlayerAction, PlayerActionCommand } from "./PlayerAction";
-import { takeDevelopmentCard } from "../../util";
+  findCurrentPlayer,
+  takeDevelopmentCard
+} from "../../util";
 
 export interface PurchaseDevelopmentCard extends PlayerAction {
   card: DevelopmentCard;

@@ -1,5 +1,5 @@
 import { DevelopmentCard, GameState } from "../Model";
-import { findCurrentPlayer } from "utils";
+import { findCurrentPlayer } from "./utils";
 
 export const takeDevelopmentCard = (
   state: GameState,

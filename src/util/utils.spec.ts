@@ -1,10 +1,5 @@
-import { ResourceTotals } from "./Model";
-import {
-  calculatePayment,
-  hasRequiredResources,
-  deduct,
-  mergeResources
-} from "./utils";
+import { ResourceTotals } from "../Model";
+import { calculatePayment, hasRequiredResources, deduct } from "./utils";
 import cases from "jest-in-case";
 
 const Free: ResourceTotals = { tokens: {}, cards: {} };

@@ -2,8 +2,12 @@ import { importDeck } from "./util/deckGenerator";
 import { RunningState } from "./ActiveGame/RunningState";
 import { GameInstanceSettings } from "./StateContracts";
 import { Player, ResourceCount, NativeResourceTypes, GameState } from "./Model";
-import { times, createResourceCollection, clone } from "./utils";
-import { populateVisibleCards } from "./util";
+import {
+  populateVisibleCards,
+  times,
+  createResourceCollection,
+  clone
+} from "./util";
 
 const deckImportJob = importDeck();
 
@@ -82,7 +86,7 @@ export const generateGameInstanceSettings = async (
   );
 };
 
-export const generateRunningGameState = async (
+export const generateGameState = async (
   settings?: GameInstanceSettings
 ): Promise<GameState> =>
   new RunningState(
