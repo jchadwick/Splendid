@@ -3,15 +3,19 @@ import { RunningState } from "./ActiveGame/RunningState";
 import { GameInstanceSettings } from "./StateContracts";
 import { Player, ResourceCount, NativeResourceTypes } from "./Model";
 import { times, createResourceCollection, clone } from "./utils";
+import { populateVisibleCards } from "./util";
 
 const deckImportJob = importDeck();
 
 export const generateDevelopmentCards = async () => clone(await deckImportJob);
 
-let playerId = 0;
-export const generatePlayer = async () =>
-  ({
-    name: `Player${++playerId}`,
+let __playerId = 0;
+export const generatePlayer = async (): Promise<Player> => {
+  const playerId = ++__playerId;
+
+  return {
+    id: String(playerId),
+    name: `Player${playerId}`,
     isHuman: false,
     patrons: [],
     playedCards: [],
@@ -22,7 +26,8 @@ export const generatePlayer = async () =>
       cards: createResourceCollection(),
       tokens: createResourceCollection()
     }
-  } as Player);
+  } as Player;
+};
 
 export const generatePlayers = async (count = 2) =>
   Promise.all(times(count)(generatePlayer));
@@ -38,17 +43,44 @@ export const generateTokens = async () =>
 
 export const generateGameInstanceSettings = async (
   settings?: GameInstanceSettings
-): Promise<GameInstanceSettings> =>
-  Object.assign(
+): Promise<GameInstanceSettings> => {
+  const players = await generatePlayers();
+  const deck = await generateDevelopmentCards();
+
+  const availableCards = [
     {
-      developmentCards: await generateDevelopmentCards(),
-      players: await generatePlayers(),
+      level: 3,
+      stock: deck.filter(x => x.level === 3),
+      visibleCards: Array(4).fill(null)
+    },
+    {
+      level: 2,
+      stock: deck.filter(x => x.level === 2),
+      visibleCards: Array(4).fill(null)
+    },
+    {
+      level: 1,
+      stock: deck.filter(x => x.level === 1),
+      visibleCards: Array(4).fill(null)
+    }
+  ];
+
+  populateVisibleCards(availableCards);
+
+  return Object.assign(
+    {
+      availableCards,
+      availableTokens: createResourceCollection(),
+      currentPlayer: players[0],
+      developmentCards: deck,
+      players,
       tokens: await generateTokens(),
       visibleCardsPerRow: 4,
       winningPoints: 15
     },
     settings
   );
+};
 
 export const generateRunningGameState = async (
   settings?: GameInstanceSettings

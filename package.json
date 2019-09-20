@@ -45,8 +45,5 @@
     "eslint-plugin-react-hooks": "^2.0.1",
     "jest-expect-message": "^1.0.2",
     "prettier": "^1.18.2"
-  },
-  "jest": {
-    "setupFilesAfterEnv": ["jest-expect-message"]
   }
 }
