@@ -1,6 +1,7 @@
 import { ResourceType, NativeResourceTypes } from "../../Model";
 import { PlayerActionCommand, PlayerAction } from "./PlayerAction";
 import { GameState } from "../../Model";
+import { findCurrentPlayer } from "utils";
 
 export interface CollectMultipleResources extends PlayerAction {
   resources: ResourceType[];
@@ -9,18 +10,21 @@ export interface CollectMultipleResources extends PlayerAction {
 export class CollectMultipleResourcesCommand extends PlayerActionCommand<
   CollectMultipleResources
 > {
-  execute(gameState: GameState) {
+  execute(state: GameState) {
     for (let resource of this.action.resources) {
-      gameState.availableTokens[resource] -= 1;
-      gameState.currentPlayer.tokens[resource] += 1;
+      state.availableTokens[resource] =
+        (state.availableTokens[resource] || 0) - 1;
+
+      findCurrentPlayer(state).tokens[resource] =
+        (findCurrentPlayer(state).tokens[resource] || 0) + 1;
     }
 
-    return gameState;
+    return state;
   }
 
-  static readonly getAvailableActions = (gameState: GameState) => {
+  static readonly getAvailableActions = (state: GameState) => {
     const availableResources = NativeResourceTypes.filter(
-      type => gameState.availableTokens[type] > 0
+      type => state.availableTokens[type] > 0
     ).map(x => ResourceType[x] as ResourceType);
 
     // not enough resources to take three

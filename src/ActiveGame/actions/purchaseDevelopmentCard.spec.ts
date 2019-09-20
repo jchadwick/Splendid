@@ -2,17 +2,17 @@ import { PurchaseDevelopmentCardCommand } from "./purchaseDevelopmentCard";
 import { DevelopmentCard, Player } from "../../Model";
 import { GameState } from "../../Model";
 import { generateRunningGameState } from "../../mockData";
-import { recalculatePlayerTotals } from "../../utils";
+import { recalculatePlayerTotals, findCurrentPlayer } from "../../utils";
 
 describe("Actions > PurchaseDevelopmentCard", () => {
   let player: Player;
   let cardToPurchase: DevelopmentCard;
-  let gameState: GameState;
+  let state: GameState;
 
   beforeEach(async () => {
-    gameState = await generateRunningGameState();
-    player = gameState.currentPlayer;
-    cardToPurchase = gameState.availableCards[0].visibleCards[0];
+    state = await generateRunningGameState();
+    player = findCurrentPlayer(state);
+    cardToPurchase = state.availableCards[0].visibleCards[0];
 
     expect(player).not.toBeUndefined();
     expect(cardToPurchase).not.toBeUndefined();
@@ -31,10 +31,10 @@ describe("Actions > PurchaseDevelopmentCard", () => {
       recalculatePlayerTotals(player);
 
       // Make sure the bank doesn't have any Diamonds
-      gameState.availableTokens.Diamond = 0;
+      state.availableTokens.Diamond = 0;
 
       new PurchaseDevelopmentCardCommand({ card: cardToPurchase }).execute(
-        gameState
+        state
       );
 
       // Make sure the card has been played
@@ -42,13 +42,13 @@ describe("Actions > PurchaseDevelopmentCard", () => {
 
       // Make sure they paid for it (to the bank)
       expect(player.tokens.Diamond).toBe(0);
-      expect(gameState.availableTokens.Diamond).toBe(1);
+      expect(state.availableTokens.Diamond).toBe(1);
     });
 
     it("should throw an error when player tries to purchase a card they can't afford", () => {
       expect(() =>
         new PurchaseDevelopmentCardCommand({ card: cardToPurchase }).execute(
-          gameState
+          state
         )
       ).toThrowError(PurchaseDevelopmentCardCommand.INSUFFICIENT_FUNDS);
 

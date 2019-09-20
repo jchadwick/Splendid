@@ -1,7 +1,7 @@
 import {
   GameSettings,
   PlayerSettings,
-  GameState,
+  GameStateBase,
   GameInstanceSettings
 } from "../StateContracts";
 import { ResourceCount, NativeResourceTypes } from "../Model";
@@ -17,7 +17,7 @@ const DefaultGameSettings: GameSettings = Object.freeze({
   visibleCardsPerRow: 4
 });
 
-export class SetupState extends GameState {
+export class SetupState extends GameStateBase {
   readonly settings: GameSettings;
 
   players: PlayerSettings[];
@@ -29,7 +29,7 @@ export class SetupState extends GameState {
   constructor(settings: GameSettings) {
     super();
     this.settings = Object.assign({}, DefaultGameSettings, settings);
-    this.players = (settings && settings.players) || [];
+    this.players = (settings && settings.playerInfo) || [];
   }
 
   addPlayer(player: PlayerSettings) {
@@ -72,7 +72,7 @@ export class SetupState extends GameState {
 
     return {
       developmentCards,
-      players,
+      playerInfo: players,
       tokens,
       winningPoints: this.settings.winningPoints,
       visibleCardsPerRow: this.settings.visibleCardsPerRow

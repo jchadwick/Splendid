@@ -1,17 +1,13 @@
-import { GameInstanceSettings, GameState } from "../StateContracts";
-import {
-  Player,
-  ResourceCount,
-  DevelopmentCard,
-  GameState as GameStateContract
-} from "../Model";
+import { GameInstanceSettings, GameStateBase } from "../StateContracts";
+import { Player, ResourceCount, DevelopmentCard, GameState } from "../Model";
 import {
   createResourceCollection,
   mergeResources,
   clone,
-  recalculatePlayerTotals
+  recalculatePlayerTotals,
+  findCurrentPlayer
 } from "../utils";
-import { shuffle } from "../util";
+import { shuffle, populateVisibleCards } from "../util";
 
 interface DevelopmentCardRow {
   level: number;
@@ -19,29 +15,12 @@ interface DevelopmentCardRow {
   visibleCards: DevelopmentCard[];
 }
 
-interface RunningStateState {
-  players: Player[];
-  currentPlayer: Player;
-  winner?: Player;
-  availableCards: DevelopmentCardRow[];
-  availableTokens: ResourceCount;
-  round: number;
-  settings: GameInstanceSettings;
-}
-
-export interface RunningStateSimulation extends RunningState {
-  playerId: string;
-  isPlayer(id: string): boolean;
-}
-
-export class RunningState extends GameState implements GameStateContract {
-  state: RunningStateState = {
-    players: null,
-    currentPlayer: null,
-    winner: null,
+export class RunningState extends GameStateBase implements GameState {
+  state: GameState & { settings: GameInstanceSettings } = {
+    players: [],
+    currentPlayerId: null,
     availableCards: [],
     availableTokens: createResourceCollection(),
-    round: 0,
     settings: null
   };
 
@@ -56,36 +35,21 @@ export class RunningState extends GameState implements GameStateContract {
     this.state.availableTokens = tokens;
   }
 
-  get gameOver(): boolean {
-    return this.winner != null;
-  }
-
-  get currentPlayer(): Player {
-    return this.state.currentPlayer;
+  get currentPlayerId(): string {
+    return this.state.currentPlayerId;
   }
 
   get players(): Player[] {
     return this.state.players;
   }
 
-  get round(): number {
-    return this.state.round;
-  }
+  readonly hash = (): string => JSON.stringify(this.state);
 
-  get winner(): Player | null {
-    return this.state.winner;
-  }
-
-  hash(): string {
-    const { availableCards, availableTokens, winner } = this.state;
-    return JSON.stringify({ availableCards, availableTokens, winner });
-  }
-
-  constructor(state?: RunningStateState | GameInstanceSettings) {
+  constructor(state?: GameState | GameInstanceSettings) {
     super();
 
-    if ("currentPlayer" in state) {
-      this.state = state;
+    if ("currentPlayerId" in state) {
+      this.state = clone(state) as any;
     } else {
       this.initialize(state);
     }
@@ -98,14 +62,14 @@ export class RunningState extends GameState implements GameStateContract {
     if (!settings.developmentCards || !settings.developmentCards.length) {
       throw new Error("No development cards provided");
     }
-    if (!settings.players) {
+    if (!settings.playerInfo) {
       throw new Error("No players provided");
     }
     if (!settings.tokens) {
       throw new Error("No tokens provided");
     }
 
-    const players = settings.players.map(
+    const players = settings.playerInfo.map(
       ({ name, isHuman }) =>
         ({
           name,
@@ -121,8 +85,6 @@ export class RunningState extends GameState implements GameStateContract {
           }
         } as Player)
     );
-
-    const currentPlayer = players[Math.floor(Math.random() * players.length)];
 
     const availableTokens = mergeResources(
       createResourceCollection(),
@@ -152,16 +114,14 @@ export class RunningState extends GameState implements GameStateContract {
     ];
 
     this.state = {
+      currentPlayerId: players[0].id,
       players,
-      currentPlayer,
       availableCards,
       availableTokens,
-      settings,
-      winner: null,
-      round: 0
+      settings
     };
 
-    this.populateVisibleCards();
+    populateVisibleCards(this.availableCards);
   }
 
   calculateResults() {
@@ -173,50 +133,6 @@ export class RunningState extends GameState implements GameStateContract {
     return { rankings };
   }
 
-  private populateVisibleCards() {
-    this.state.availableCards.forEach(row => {
-      while (
-        row.visibleCards.length < this.state.settings.visibleCardsPerRow &&
-        row.stock.length !== 0
-      ) {
-        row.visibleCards.push(row.stock.pop());
-      }
-    });
-  }
-
-  private goToNextPlayer() {
-    let nextPlayerIndex =
-      this.players.findIndex(x => x.name === this.currentPlayer.name) + 1;
-
-    // if we're at the end, go back to the beginning
-    if (nextPlayerIndex >= this.players.length) {
-      nextPlayerIndex = 0;
-      this.state.round += 1;
-    }
-
-    this.state.currentPlayer = this.players[nextPlayerIndex];
-  }
-
-  beginTurn(): RunningState {
-    recalculatePlayerTotals(this);
-    this.populateVisibleCards();
-    return this;
-  }
-
-  endTurn(): RunningState {
-    recalculatePlayerTotals(this);
-
-    const winner = this.players.find(
-      x => x.prestigePoints >= this.state.settings.winningPoints
-    );
-
-    if (winner) {
-      this.state.winner = winner;
-      this.triggerNext();
-    } else {
-      this.goToNextPlayer();
-    }
-
-    return this;
-  }
+  readonly isCurrentPlayer = (playerId: string): boolean =>
+    findCurrentPlayer(this).id === playerId;
 }

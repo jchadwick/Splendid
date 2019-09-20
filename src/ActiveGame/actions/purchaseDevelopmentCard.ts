@@ -4,7 +4,8 @@ import {
   calculatePayment,
   deduct,
   mergeResources,
-  calculatePlayerResourceTotals
+  calculatePlayerResourceTotals,
+  findCurrentPlayer
 } from "../../utils";
 import { PlayerAction, PlayerActionCommand } from "./PlayerAction";
 import { takeDevelopmentCard } from "../../util";
@@ -21,14 +22,15 @@ export class PurchaseDevelopmentCardCommand extends PlayerActionCommand<
 
   static readonly UNAVAILABLE_CARD = "Card is not available to play";
 
-  execute(gameState: GameState) {
+  execute(state: GameState) {
     const card = this.action.card;
 
     if (card == null) {
       throw new Error("Can't purchase an empty card!");
     }
 
-    const player = gameState.currentPlayer;
+    const player = findCurrentPlayer(state);
+
     const payment = calculatePayment(
       card.cost,
       calculatePlayerResourceTotals(player)
@@ -38,7 +40,7 @@ export class PurchaseDevelopmentCardCommand extends PlayerActionCommand<
       throw new Error(PurchaseDevelopmentCardCommand.INSUFFICIENT_FUNDS);
     }
 
-    const isOnTable = gameState.availableCards.some(row =>
+    const isOnTable = state.availableCards.some(row =>
       row.visibleCards.some(x => x && x.id === card.id)
     );
 
@@ -52,14 +54,14 @@ export class PurchaseDevelopmentCardCommand extends PlayerActionCommand<
     player.tokens = deduct(payment.tokens, player.tokens);
 
     // ... and add it (back) to the bank
-    gameState.availableTokens = mergeResources(
-      gameState.availableTokens,
+    state.availableTokens = mergeResources(
+      state.availableTokens,
       payment.tokens
     );
 
     // take it from the table
     if (isOnTable) {
-      takeDevelopmentCard(gameState, card);
+      takeDevelopmentCard(state, card);
     }
     // or take it from the player's hand
     else if (reservedCard) {
@@ -77,20 +79,20 @@ export class PurchaseDevelopmentCardCommand extends PlayerActionCommand<
     // add the card to the collection of played cards
     player.playedCards.push(card);
 
-    return gameState;
+    return state;
   }
 
-  static readonly getAvailableActions = (gameState: GameState) =>
+  static readonly getAvailableActions = (state: GameState) =>
     [
-      ...gameState.availableCards.flatMap(x => x.visibleCards),
-      ...gameState.currentPlayer.reservedCards
+      ...state.availableCards.flatMap(x => x.visibleCards),
+      ...findCurrentPlayer(state).reservedCards
     ]
       .filter(
         card =>
           card &&
           hasRequiredResources(
             card.cost,
-            gameState.currentPlayer.totalResources
+            findCurrentPlayer(state).totalResources
           )
       )
       .map(card => new PurchaseDevelopmentCardCommand({ card }));

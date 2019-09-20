@@ -1,7 +1,7 @@
 import { importDeck } from "./util/deckGenerator";
 import { RunningState } from "./ActiveGame/RunningState";
 import { GameInstanceSettings } from "./StateContracts";
-import { Player, ResourceCount, NativeResourceTypes } from "./Model";
+import { Player, ResourceCount, NativeResourceTypes, GameState } from "./Model";
 import { times, createResourceCollection, clone } from "./utils";
 import { populateVisibleCards } from "./util";
 
@@ -71,7 +71,7 @@ export const generateGameInstanceSettings = async (
     {
       availableCards,
       availableTokens: createResourceCollection(),
-      currentPlayer: players[0],
+      currentPlayerId: players[0].id,
       developmentCards: deck,
       players,
       tokens: await generateTokens(),
@@ -84,7 +84,7 @@ export const generateGameInstanceSettings = async (
 
 export const generateRunningGameState = async (
   settings?: GameInstanceSettings
-) =>
+): Promise<GameState> =>
   new RunningState(
     Object.assign(await generateGameInstanceSettings(), settings)
   );

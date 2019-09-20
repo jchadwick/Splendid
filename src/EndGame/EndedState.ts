@@ -1,10 +1,10 @@
 import {
   PlayerRanking,
   GameInstanceResults,
-  GameState
+  GameStateBase
 } from "../StateContracts";
 
-export class EndedState extends GameState {
+export class EndedState extends GameStateBase {
   readonly rankings: PlayerRanking[];
 
   get winner(): PlayerRanking {

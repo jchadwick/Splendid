@@ -1,4 +1,5 @@
 import { GameState, NativeResourceTypes } from "../Model";
+import { findCurrentPlayer } from "utils";
 
 const TOKEN_MULTIPLIER = 1;
 const WILD_MULTIPLIER = 3;
@@ -7,11 +8,8 @@ const PATRON_MULTIPLER = 20;
 const POINT_MULTIPLIER = 50;
 
 export const calculateScenarioScore = (state: GameState): number => {
-  if (!state.currentPlayer) {
-    throw Error("THERE IS NO CURRENT PLAYER - THIS SHOULD NEVER HAPPEN!");
-  }
-
-  const { patrons, playedCards, prestigePoints, tokens } = state.currentPlayer;
+  const player = findCurrentPlayer(state);
+  const { patrons, playedCards, prestigePoints, tokens } = player;
 
   const tokenCount = NativeResourceTypes.reduce(
     (total, type) => total + tokens[type],

@@ -1,12 +1,11 @@
 import { DevelopmentCard, GameState } from "../Model";
+import { findCurrentPlayer } from "utils";
 
 export const takeDevelopmentCard = (
   state: GameState,
   card: DevelopmentCard
 ) => {
-  if (card == null) {
-    throw new Error("Can't take an empty card!");
-  }
+  const player = findCurrentPlayer(state);
 
   for (let row of state.availableCards) {
     const matchesCardId = (x: DevelopmentCard) => x && x.id === card.id;
@@ -19,11 +18,11 @@ export const takeDevelopmentCard = (
 
     if (isStockCard) {
       row.stock.pop();
-      state.currentPlayer.reservedCards.push(card);
+      player.reservedCards.push(card);
       return;
     } else if (isVisibleCard) {
       row.visibleCards[visibleCardIndex] = null;
-      state.currentPlayer.reservedCards.push(card);
+      player.reservedCards.push(card);
       return;
     }
   }

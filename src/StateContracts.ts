@@ -5,7 +5,7 @@ export interface IGameState {
   onNext(listener: EventEmitter.ListenerFn): void;
 }
 
-export abstract class GameState implements IGameState {
+export abstract class GameStateBase implements IGameState {
   protected events = new EventEmitter();
 
   onNext(listener: EventEmitter.ListenerFn) {
@@ -30,14 +30,14 @@ export interface GameInstanceSettings {
   developmentCards: DevelopmentCard[];
   visibleCardsPerRow: number;
   winningPoints: number;
-  players: PlayerSettings[];
+  playerInfo: PlayerSettings[];
   tokens: ResourceCount;
 }
 
 export interface GameSettings {
   visibleCardsPerRow?: number;
   winningPoints?: number;
-  players?: PlayerSettings[];
+  playerInfo?: PlayerSettings[];
   minPlayerCount?: number;
   maxPlayerCount?: number;
   twoPlayerTokenCount?: number;

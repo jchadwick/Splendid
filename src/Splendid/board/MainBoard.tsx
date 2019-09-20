@@ -72,9 +72,11 @@ const useStyles = makeStyles(() =>
 
 export const MainBoard: React.FC<IBoardProps<GameState, Moves>> = props => {
   const {
-    G: { availableCards, availableTokens, currentPlayer, players },
+    G: { availableCards, availableTokens, currentPlayerId, players },
     moves
   } = props;
+
+  const currentPlayer = players[currentPlayerId];
 
   return (
     <MainBoardView

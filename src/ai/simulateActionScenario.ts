@@ -1,14 +1,12 @@
-import {
-  RunningState,
-  RunningStateSimulation
-} from "../ActiveGame/RunningState";
+import { RunningState } from "../ActiveGame/RunningState";
 import { PlayerActionCommand } from "../ActiveGame/actions/PlayerAction";
-import { clone, recalculatePlayerTotals } from "utils";
+import { recalculatePlayerTotals } from "utils";
+import { GameState } from "Model";
 
 export const simulateActionScenario = (
-  state: RunningStateSimulation,
+  state: GameState,
   action: PlayerActionCommand
-): RunningStateSimulation => {
+): GameState => {
   if (action == null) {
     return null;
   }
@@ -16,17 +14,8 @@ export const simulateActionScenario = (
   const simulatedState = action.execute(cloneGameState(state));
   recalculatePlayerTotals(simulatedState);
 
-  return simulatedState as RunningStateSimulation;
+  return simulatedState;
 };
 
-export const cloneGameState = (
-  state: RunningState | RunningStateSimulation
-): RunningStateSimulation => {
-  const playerId =
-    "playerId" in state ? state.playerId : state.currentPlayer.name;
-
-  return Object.assign(new RunningState(clone(state.state)), {
-    playerId,
-    isPlayer: (id: string) => id === playerId
-  });
-};
+export const cloneGameState = (state: GameState): GameState =>
+  new RunningState(state);

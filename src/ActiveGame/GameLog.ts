@@ -8,11 +8,12 @@ import {
 } from "./actions";
 import pluralize from "pluralize";
 import { EndedState } from "../EndGame/EndedState";
-import { recalculatePlayerTotals } from "utils";
+import { recalculatePlayerTotals, findCurrentPlayer } from "utils";
 
 export class GameLog {
-  actionTaken(command: PlayerActionCommand, gameState: GameState) {
-    const playerName = gameState.currentPlayer.name;
+  actionTaken(command: PlayerActionCommand, state: GameState) {
+    const playerName = findCurrentPlayer(state).name;
+
     if (command instanceof CollectMultipleResourcesCommand) {
       console.log(
         `[CollectMultipleResources] ${playerName} takes ${JSON.stringify(
@@ -41,7 +42,7 @@ export class GameLog {
   }
 
   turnSummary(state: GameState) {
-    const player = state.currentPlayer;
+    const player = findCurrentPlayer(state);
 
     recalculatePlayerTotals(player);
 

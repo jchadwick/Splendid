@@ -1,7 +1,3 @@
-import {
-  RunningStateSimulation,
-  RunningState
-} from "../ActiveGame/RunningState";
 import { PlayerActionCommand } from "../ActiveGame/actions/PlayerAction";
 import {
   cloneGameState,
@@ -9,15 +5,16 @@ import {
 } from "./simulateActionScenario";
 import { calculateScenarioScore } from "./calculateScenarioScore";
 import { getAvailableActions } from "../util";
+import { GameState } from "Model";
 
 interface SimulatedActionScenarioResult {
   action: PlayerActionCommand;
-  result: RunningStateSimulation;
+  result: GameState;
   score: number;
 }
 
 export const selectAIPlayerAction = async (
-  gameState: RunningState
+  gameState: GameState
 ): Promise<PlayerActionCommand> => {
   const actions = getAvailableActions(gameState);
 
@@ -29,7 +26,11 @@ export const selectAIPlayerAction = async (
             cloneGameState(gameState),
             action
           );
-          done({ action, result, score: calculateScenarioScore(result) });
+          done({
+            action,
+            result,
+            score: calculateScenarioScore(result)
+          });
         })
     )
   );

@@ -12,7 +12,7 @@ export const SplendidGame = Game<GameState, Moves>({
   flow: {
     movesPerTurn: 1,
     onTurnBegin: (G, ctx) => {
-      G.currentPlayer = G.players.find(x => x.id === ctx.currentPlayer);
+      G.currentPlayerId = ctx.currentPlayer;
     },
     onTurnEnd: (G, ctx) => {
       // TODO: evaluate patrons

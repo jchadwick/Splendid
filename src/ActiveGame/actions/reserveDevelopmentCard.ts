@@ -1,6 +1,7 @@
 import { DevelopmentCard, GameState } from "../../Model";
 import { PlayerAction, PlayerActionCommand } from "./PlayerAction";
 import { takeDevelopmentCard } from "../../util";
+import { findCurrentPlayer } from "utils";
 
 export interface ReserveDevelopmentCard extends PlayerAction {
   card: DevelopmentCard;
@@ -9,28 +10,25 @@ export interface ReserveDevelopmentCard extends PlayerAction {
 export class ReserveDevelopmentCardCommand extends PlayerActionCommand<
   ReserveDevelopmentCard
 > {
-  execute(gameState: GameState): GameState {
+  execute(state: GameState): GameState {
     const card = this.action.card;
 
     if (card == null) {
       throw new Error("Can't reserve an empty card!");
     }
 
-    const player = gameState.currentPlayer;
-
-    // add the card to the player's hand
-    player.reservedCards.push(card);
+    const player = findCurrentPlayer(state);
 
     // give the player a wild token
-    if (gameState.availableTokens.Wild > 0) {
-      player.tokens.Wild += 1;
-      gameState.availableTokens.Wild -= 1;
+    if (state.availableTokens.Wild > 0) {
+      player.tokens.Wild = (player.tokens.Wild || 0) + 1;
+      state.availableTokens.Wild = (state.availableTokens.Wild || 0) - 1;
     }
 
     // take the card off the table and add a new one in its place
-    takeDevelopmentCard(gameState, card);
+    takeDevelopmentCard(state, card);
 
-    return gameState;
+    return state;
   }
 
   static readonly getAvailableActions = (gameState: GameState) =>

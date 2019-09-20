@@ -246,4 +246,18 @@ export const recalculatePlayerTotals = (
   }
 };
 
+export const findCurrentPlayer = (state: GameState): Player => {
+  const player = findPlayer(state.players, state.currentPlayerId);
+  if (player == null) {
+    throw new Error("Couldn't find current player");
+  }
+  return player;
+};
+
+export const findPlayer = (
+  players: Player[],
+  playerId: string
+): Player | null =>
+  players == null ? null : players.find(x => x.id === playerId);
+
 export const clone = <T>(source: T): T => JSON.parse(JSON.stringify(source));

@@ -5,6 +5,7 @@ import { SetupState } from "./Setup/SetupState";
 import { waitFor } from "./utils";
 import gameLog from "./ActiveGame/GameLog";
 import { selectAIPlayerAction } from "./ai";
+import { getWinners } from "./util";
 
 const args = process.argv.slice(2);
 console.log(JSON.stringify(args));
@@ -34,9 +35,7 @@ if (isNaN(playerCount) || playerCount < 2 || playerCount > 4) {
 
   gameState.onNext(() => gameLog.roundSummary(gameState));
 
-  while (!gameState.gameOver) {
-    gameState.beginTurn();
-
+  while (getWinners(gameState).length === 0) {
     const action = await selectAIPlayerAction(gameState);
 
     gameLog.actionTaken(action, gameState);
@@ -44,7 +43,6 @@ if (isNaN(playerCount) || playerCount < 2 || playerCount > 4) {
     action.execute(gameState);
 
     gameLog.turnSummary(gameState);
-    gameState.endTurn();
   }
 
   await waitFor(() => controller.state instanceof EndedState);

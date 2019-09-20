@@ -1,6 +1,6 @@
-import { ResourceType, NativeResourceTypes } from "../../Model";
+import { GameState, ResourceType, NativeResourceTypes } from "../../Model";
 import { PlayerAction, PlayerActionCommand } from "./PlayerAction";
-import { GameState } from "../../Model";
+import { findCurrentPlayer } from "../../utils";
 
 export interface CollectSingleResource extends PlayerAction {
   resource: ResourceType;
@@ -9,14 +9,16 @@ export interface CollectSingleResource extends PlayerAction {
 export class CollectSingleResourceCommand extends PlayerActionCommand<
   CollectSingleResource
 > {
-  execute(gameState: GameState) {
-    gameState.availableTokens[this.action.resource] =
-      (gameState.availableTokens[this.action.resource] || 0) - 2;
+  execute(state: GameState) {
+    state.availableTokens[this.action.resource] =
+      (state.availableTokens[this.action.resource] || 0) - 2;
 
-    gameState.currentPlayer.tokens[this.action.resource] =
-      (gameState.currentPlayer.tokens[this.action.resource] || 0) + 2;
+    const player = findCurrentPlayer(state);
 
-    return gameState;
+    player.tokens[this.action.resource] =
+      (player.tokens[this.action.resource] || 0) + 2;
+
+    return state;
   }
 
   static readonly getAvailableActions = (gameState: GameState) =>
