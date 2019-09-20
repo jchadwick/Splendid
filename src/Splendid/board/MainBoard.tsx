@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { Moves } from "../game/GameMoves";
-import { DevelopmentCard, GameState, ResourceType } from "../../Model";
+import { DevelopmentCard, GameState, ResourceType, Player } from "../../Model";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
 import { IBoardProps } from "boardgame.io/react";
 
@@ -72,12 +72,34 @@ const useStyles = makeStyles(() =>
 
 export const MainBoard: React.FC<IBoardProps<GameState, Moves>> = props => {
   const {
-    G: { availableCards, availableTokens },
+    G: { availableCards, availableTokens, currentPlayer, players },
     moves
   } = props;
-  const classes = useStyles(props);
+
+  return (
+    <MainBoardView
+      {...{
+        availableCards,
+        availableTokens,
+        currentPlayer,
+        moves,
+        players
+      }}
+    />
+  );
+};
+
+export const MainBoardView = ({
+  availableCards,
+  availableTokens,
+  currentPlayer,
+  moves,
+  players
+}) => {
+  const classes = useStyles({});
 
   const [selectedTokens, setSelectedTokens] = useState([]);
+  const userPlayer = currentPlayer;
 
   const selectToken = useCallback(
     token => {
@@ -104,7 +126,6 @@ export const MainBoard: React.FC<IBoardProps<GameState, Moves>> = props => {
         newSelectedTokens = [];
       }
 
-      console.log(`selected tokens: ${newSelectedTokens.join(", ")}`);
       setSelectedTokens(newSelectedTokens);
     },
     [moves, selectedTokens]
@@ -188,139 +209,64 @@ export const MainBoard: React.FC<IBoardProps<GameState, Moves>> = props => {
         ))}
       </div>
       <div id="player-list" className={classes.playerList}>
-        <div className="player" itemScope itemType="urn:x:player" itemID="3">
-          <div itemProp="name">Player 1</div>
-          <div className="inventory">
-            <div itemProp="inventory">
-              <div className="cards">
-                <div className="subtitle">Cards</div>
-                <div itemProp="card">
-                  <div itemProp="resource" data-value="Diamond"></div>
-                  <div itemProp="prestigePoints" data-value="1"></div>
-                  <div itemProp="cost">
-                    <div itemProp="token">
-                      <div itemProp="resource" data-value="Diamond"></div>
-                      <div itemProp="count" data-value="2"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="tokens">
-                <div className="subtitle">Tokens</div>
-                <div itemProp="token">
-                  <div itemProp="resource" data-value="Diamond"></div>
-                  <div itemProp="count" data-value="2"></div>
-                </div>
-                <div itemProp="token">
-                  <div itemProp="resource" data-value="Emerald"></div>
-                  <div itemProp="count" data-value="3"></div>
-                </div>
-                <div itemProp="token">
-                  <div itemProp="resource" data-value="Sapphire"></div>
-                  <div itemProp="count" data-value="1"></div>
-                </div>
-                <div itemProp="token">
-                  <div itemProp="resource" data-value="Onyx"></div>
-                  <div itemProp="count" data-value="2"></div>
-                </div>
-                <div itemProp="token">
-                  <div itemProp="resource" data-value="Wild"></div>
-                  <div itemProp="count" data-value="2"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="player" itemScope itemType="urn:x:player" itemID="3">
-          <div itemProp="name">Player 2</div>
-          <div className="inventory">
-            <div itemProp="inventory">
-              <div className="cards">
-                <div className="subtitle">Cards</div>
-                <div itemProp="card">
-                  <div itemProp="resource" data-value="Diamond"></div>
-                  <div itemProp="prestigePoints" data-value="1"></div>
-                  <div itemProp="cost">
-                    <div itemProp="token">
-                      <div itemProp="resource" data-value="Diamond"></div>
-                      <div itemProp="count" data-value="2"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="tokens">
-                <div className="subtitle">Tokens</div>
-                <div itemProp="token">
-                  <div itemProp="resource" data-value="Diamond"></div>
-                  <div itemProp="count" data-value="2"></div>
-                </div>
-                <div itemProp="token">
-                  <div itemProp="resource" data-value="Emerald"></div>
-                  <div itemProp="count" data-value="3"></div>
-                </div>
-                <div itemProp="token">
-                  <div itemProp="resource" data-value="Sapphire"></div>
-                  <div itemProp="count" data-value="1"></div>
-                </div>
-                <div itemProp="token">
-                  <div itemProp="resource" data-value="Onyx"></div>
-                  <div itemProp="count" data-value="2"></div>
-                </div>
-                <div itemProp="token">
-                  <div itemProp="resource" data-value="Wild"></div>
-                  <div itemProp="count" data-value="2"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="player" itemScope itemType="urn:x:player" itemID="3">
-          <div itemProp="name">Player 3</div>
-          <div className="inventory">
-            <div itemProp="inventory">
-              <div className="cards">
-                <div className="subtitle">Cards</div>
-                <div itemProp="card">
-                  <div itemProp="resource" data-value="Diamond"></div>
-                  <div itemProp="prestigePoints" data-value="1"></div>
-                  <div itemProp="cost">
-                    <div itemProp="token">
-                      <div itemProp="resource" data-value="Diamond"></div>
-                      <div itemProp="count" data-value="2"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="tokens">
-                <div className="subtitle">Tokens</div>
-                <div itemProp="token">
-                  <div itemProp="resource" data-value="Diamond"></div>
-                  <div itemProp="count" data-value="2"></div>
-                </div>
-                <div itemProp="token">
-                  <div itemProp="resource" data-value="Emerald"></div>
-                  <div itemProp="count" data-value="3"></div>
-                </div>
-                <div itemProp="token">
-                  <div itemProp="resource" data-value="Sapphire"></div>
-                  <div itemProp="count" data-value="1"></div>
-                </div>
-                <div itemProp="token">
-                  <div itemProp="resource" data-value="Onyx"></div>
-                  <div itemProp="count" data-value="2"></div>
-                </div>
-                <div itemProp="token">
-                  <div itemProp="resource" data-value="Wild"></div>
-                  <div itemProp="count" data-value="2"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        {players.map(player => (
+          <PlayerOverview
+            isCurrentPlayer={player === currentPlayer}
+            player={player}
+          />
+        ))}
       </div>
       <div id="inventory" className={classes.inventory}>
-        [PLAYER INVENTORY]
+        <UserPlayerInventory player={userPlayer} />
       </div>
     </div>
   );
 };
+
+const PlayerOverview = ({
+  isCurrentPlayer,
+  player
+}: {
+  isCurrentPlayer: boolean;
+  player: Player;
+}) => (
+  <div
+    className="player"
+    itemScope
+    itemType="urn:x:player"
+    itemID={String(player.id)}
+  >
+    <div itemProp="name">
+      {player.name} {isCurrentPlayer && "(Current)"}{" "}
+    </div>
+    <div className="inventory">
+      <PlayerInventory
+        reservedCards={player.reservedCards}
+        tokens={player.tokens}
+      />
+    </div>
+  </div>
+);
+
+const PlayerInventory = ({ reservedCards, tokens }) => (
+  <div itemProp="inventory">
+    <div className="cards">
+      <div className="subtitle">Cards</div>
+      <div itemProp="card-count" data-value={reservedCards.length} />
+    </div>
+    <div className="tokens">
+      <div className="subtitle">Tokens</div>
+
+      {Object.keys(tokens).map(resource => (
+        <div itemProp="token">
+          <div itemProp="resource" data-value={resource}></div>
+          <div itemProp="count" data-value={tokens[resource]}></div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const UserPlayerInventory = ({ player }: { player: Player }) => (
+  <div>[PLAYER INVENTORY]</div>
+);
