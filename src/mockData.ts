@@ -1,13 +1,7 @@
 import { importDeck } from "./util/deckGenerator";
-import { RunningState } from "./ActiveGame/RunningState";
 import { GameInstanceSettings } from "./StateContracts";
-import { Player, ResourceCount, NativeResourceTypes, GameState } from "./Model";
-import {
-  populateVisibleCards,
-  times,
-  createResourceCollection,
-  clone
-} from "./util";
+import { Player, ResourceCount, NativeResourceTypes } from "./Model";
+import { times, createResourceCollection, clone, createNewGame } from "./util";
 
 const deckImportJob = importDeck();
 
@@ -46,49 +40,15 @@ export const generateTokens = async () =>
   );
 
 export const generateGameInstanceSettings = async (
-  settings?: GameInstanceSettings
-): Promise<GameInstanceSettings> => {
-  const players = await generatePlayers();
-  const deck = await generateDevelopmentCards();
+  settings?: Partial<GameInstanceSettings>
+): Promise<GameInstanceSettings> => ({
+  developmentCards: await generateDevelopmentCards(),
+  playerInfo: await generatePlayers(),
+  tokens: await generateTokens(),
+  visibleCardsPerRow: 4,
+  winningPoints: 15,
+  ...settings
+});
 
-  const availableCards = [
-    {
-      level: 3,
-      stock: deck.filter(x => x.level === 3),
-      visibleCards: Array(4).fill(null)
-    },
-    {
-      level: 2,
-      stock: deck.filter(x => x.level === 2),
-      visibleCards: Array(4).fill(null)
-    },
-    {
-      level: 1,
-      stock: deck.filter(x => x.level === 1),
-      visibleCards: Array(4).fill(null)
-    }
-  ];
-
-  populateVisibleCards(availableCards);
-
-  return Object.assign(
-    {
-      availableCards,
-      availableTokens: createResourceCollection(),
-      currentPlayerId: players[0].id,
-      developmentCards: deck,
-      players,
-      tokens: await generateTokens(),
-      visibleCardsPerRow: 4,
-      winningPoints: 15
-    },
-    settings
-  );
-};
-
-export const generateGameState = async (
-  settings?: GameInstanceSettings
-): Promise<GameState> =>
-  new RunningState(
-    Object.assign(await generateGameInstanceSettings(), settings)
-  );
+export const generateGameState = async () =>
+  createNewGame(await generateGameInstanceSettings());

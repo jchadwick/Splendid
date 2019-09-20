@@ -1,3 +1,4 @@
+export * from "./createNewGame";
 export * from "./deckGenerator";
 export * from "./getAvailableActions";
 export * from "./getWinners";
