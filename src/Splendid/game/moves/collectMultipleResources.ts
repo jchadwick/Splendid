@@ -1,6 +1,6 @@
-import { GameState, ResourceType, NativeResourceTypes } from "../../Model";
+import { GameState, ResourceType, NativeResourceTypes } from "../../../Model";
 import { PlayerActionCommand, PlayerAction } from "./PlayerAction";
-import { findCurrentPlayer } from "../../util";
+import { findCurrentPlayer } from "../../../util";
 
 export interface CollectMultipleResources extends PlayerAction {
   resources: ResourceType[];

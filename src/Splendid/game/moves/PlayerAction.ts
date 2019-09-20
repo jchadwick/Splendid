@@ -1,4 +1,4 @@
-import { GameState } from "../../Model";
+import { GameState } from "../../../Model";
 
 export interface PlayerAction {}
 

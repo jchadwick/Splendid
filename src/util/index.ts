@@ -1,6 +1,5 @@
 export * from "./createNewGame";
 export * from "./deckGenerator";
-export * from "./getAvailableActions";
 export * from "./getWinners";
 export * from "./populateVisibleCards";
 export * from "./shuffle";

@@ -1,8 +1,7 @@
-import { DevelopmentCard, Player } from "../../Model";
-import { GameState } from "../../Model";
+import { DevelopmentCard, Player, GameState } from "../../../Model";
 import { ReserveDevelopmentCardCommand } from "./reserveDevelopmentCard";
-import { generateGameState } from "../../mockData";
-import { findCurrentPlayer } from "../../util";
+import { generateGameState } from "../../../mockData";
+import { findCurrentPlayer } from "../../../util";
 
 describe("Actions > reserveDevelopmentCard", () => {
   let player: Player;

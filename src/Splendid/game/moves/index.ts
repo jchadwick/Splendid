@@ -1,11 +1,9 @@
-import { GameContext, GameState } from "../../Model";
-import {
-  CollectMultipleResourcesCommand,
-  CollectSingleResourceCommand,
-  ReserveDevelopmentCardCommand,
-  PurchaseDevelopmentCardCommand
-} from "ActiveGame/actions";
-import { PlayerActionCommand } from "ActiveGame/actions/PlayerAction";
+import { CollectMultipleResourcesCommand } from "./collectMultipleResources";
+import { CollectSingleResourceCommand } from "./collectSingleResource";
+import { PurchaseDevelopmentCardCommand } from "./purchaseDevelopmentCard";
+import { ReserveDevelopmentCardCommand } from "./reserveDevelopmentCard";
+import { PlayerActionCommand } from "./PlayerAction";
+import { GameContext, GameState } from "../../../Model";
 
 export type Moves = { [key in keyof typeof moves]: (...args) => void };
 
@@ -43,3 +41,5 @@ export const moves: { [key: string]: GameActionHandler } = {
   reserveDevelopmentCard: (G, ctx, card) =>
     executeCommand(G, ctx, ReserveDevelopmentCardCommand, { card })
 };
+
+export default moves;

@@ -1,6 +1,6 @@
 import { Game } from "boardgame.io/core";
 import { GameState } from "../../Model";
-import { moves, Moves } from "./GameMoves";
+import moves, { Moves } from "./moves";
 import { initializeGame as setup } from "./initializeGame";
 import { populateVisibleCards } from "../../util";
 

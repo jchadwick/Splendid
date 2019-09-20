@@ -1,7 +1,12 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext", "es2019.array"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext",
+      "es2019.array"
+    ],
     "allowJs": true,
     "downlevelIteration": true,
     "skipLibCheck": true,
@@ -18,8 +23,13 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react",
-    "typeRoots": ["src/types", "node_modules/@types"],
+    "typeRoots": [
+      "src/types",
+      "node_modules/@types"
+    ],
     "baseUrl": "src"
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ]
 }

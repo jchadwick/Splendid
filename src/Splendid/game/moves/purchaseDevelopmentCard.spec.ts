@@ -1,8 +1,7 @@
 import { PurchaseDevelopmentCardCommand } from "./purchaseDevelopmentCard";
-import { DevelopmentCard, Player } from "../../Model";
-import { GameState } from "../../Model";
-import { generateGameState } from "../../mockData";
-import { recalculatePlayerTotals, findCurrentPlayer } from "../../util";
+import { DevelopmentCard, Player, GameState } from "../../../Model";
+import { generateGameState } from "../../../mockData";
+import { recalculatePlayerTotals, findCurrentPlayer } from "../../../util";
 
 describe("Actions > PurchaseDevelopmentCard", () => {
   let player: Player;
