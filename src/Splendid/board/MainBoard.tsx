@@ -209,8 +209,9 @@ export const MainBoardView = ({
         ))}
       </div>
       <div id="player-list" className={classes.playerList}>
-        {players.map(player => (
+        {players.map((player: Player) => (
           <PlayerOverview
+            key={player.id}
             isCurrentPlayer={player === currentPlayer}
             player={player}
           />
