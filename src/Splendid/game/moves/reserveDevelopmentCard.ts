@@ -34,9 +34,16 @@ export class ReserveDevelopmentCardCommand extends PlayerActionCommand<
     return state;
   }
 
-  static readonly getAvailableMoves = (state: GameState): AvailableMove[] =>
-    state.availableCards
+  static readonly getAvailableMoves = (state: GameState): AvailableMove[] => {
+    const player = findCurrentPlayer(state);
+
+    if (player.reservedCards.length >= 4) {
+      return [];
+    }
+
+    return state.availableCards
       .flatMap(x => x.visibleCards)
       .filter(x => x != null)
       .map(card => ({ move: "reserveDevelopmentCard", args: [card] }));
+  };
 }
