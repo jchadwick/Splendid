@@ -2,7 +2,7 @@ import { GameState, Player } from "../Model";
 import { GameInstanceSettings } from "../StateContracts";
 import {
   createResourceCollection,
-  mergeResources,
+  add,
   clone,
   shuffle,
   populateVisibleCards
@@ -39,10 +39,7 @@ export const createNewGame = (settings?: GameInstanceSettings): GameState => {
     })
   );
 
-  const availableTokens = mergeResources(
-    createResourceCollection(),
-    settings.tokens
-  );
+  const availableTokens = add(createResourceCollection(), settings.tokens);
 
   let deck = clone(settings.developmentCards);
 

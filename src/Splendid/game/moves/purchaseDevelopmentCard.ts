@@ -1,13 +1,18 @@
-import { DevelopmentCard, GameState } from "../../../Model";
-import { PlayerAction, PlayerActionCommand } from "./PlayerAction";
+import { DevelopmentCard, GameState, ResourceTotals } from "../../../Model";
+import {
+  PlayerAction,
+  PlayerActionCommand,
+  AvailableMove
+} from "./PlayerAction";
 import {
   hasRequiredResources,
   calculatePayment,
   deduct,
-  mergeResources,
+  add,
   calculatePlayerResourceTotals,
   findCurrentPlayer,
-  takeDevelopmentCard
+  takeDevelopmentCard,
+  calculateCardResources
 } from "../../../util";
 
 export interface PurchaseDevelopmentCard extends PlayerAction {
@@ -54,10 +59,7 @@ export class PurchaseDevelopmentCardCommand extends PlayerActionCommand<
     player.tokens = deduct(payment.tokens, player.tokens);
 
     // ... and add it (back) to the bank
-    state.availableTokens = mergeResources(
-      state.availableTokens,
-      payment.tokens
-    );
+    state.availableTokens = add(state.availableTokens, payment.tokens);
 
     // take it from the table
     if (isOnTable) {
@@ -82,18 +84,27 @@ export class PurchaseDevelopmentCardCommand extends PlayerActionCommand<
     return state;
   }
 
-  static readonly getAvailableActions = (state: GameState) =>
-    [
-      ...state.availableCards.flatMap(x => x.visibleCards),
-      ...findCurrentPlayer(state).reservedCards
-    ]
-      .filter(
-        card =>
-          card &&
-          hasRequiredResources(
-            card.cost,
-            findCurrentPlayer(state).totalResources
-          )
-      )
-      .map(card => new PurchaseDevelopmentCardCommand({ card }));
+  static readonly getAvailableMoves = (state: GameState): AvailableMove[] => {
+    const visibleCards = state.availableCards.flatMap(x => x.visibleCards);
+    const reservedCards = findCurrentPlayer(state).reservedCards;
+    const accessibleCards = [...visibleCards, ...reservedCards].filter(
+      x => x != null
+    );
+
+    const currentPlayer = findCurrentPlayer(state);
+
+    const playerResources: ResourceTotals = {
+      tokens: currentPlayer.tokens,
+      cards: calculateCardResources(currentPlayer.playedCards)
+    };
+
+    const playableCards = accessibleCards.filter(card =>
+      hasRequiredResources(card.cost, playerResources)
+    );
+
+    return playableCards.map(card => ({
+      move: "purchaseDevelopmentCard",
+      args: [card]
+    }));
+  };
 }

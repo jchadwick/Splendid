@@ -54,5 +54,17 @@ describe("Actions > PurchaseDevelopmentCard", () => {
       // Make sure the card has NOT been played
       expect(player.playedCards).not.toContain(cardToPurchase);
     });
+
+    it("should report available moves", () => {
+      cardToPurchase.cost.cards = {};
+      cardToPurchase.cost.tokens = { Diamond: 1 };
+      player.tokens.Diamond = 1;
+
+      const availableCards = PurchaseDevelopmentCardCommand.getAvailableMoves(
+        state
+      ).flatMap(x => x.args);
+
+      expect(availableCards).toContain(cardToPurchase);
+    });
   });
 });

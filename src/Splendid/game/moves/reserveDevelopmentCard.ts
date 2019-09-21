@@ -1,5 +1,9 @@
 import { DevelopmentCard, GameState } from "../../../Model";
-import { PlayerAction, PlayerActionCommand } from "./PlayerAction";
+import {
+  PlayerAction,
+  PlayerActionCommand,
+  AvailableMove
+} from "./PlayerAction";
 import { findCurrentPlayer, takeDevelopmentCard } from "../../../util";
 
 export interface ReserveDevelopmentCard extends PlayerAction {
@@ -30,9 +34,9 @@ export class ReserveDevelopmentCardCommand extends PlayerActionCommand<
     return state;
   }
 
-  static readonly getAvailableActions = (gameState: GameState) =>
-    gameState.availableCards
+  static readonly getAvailableMoves = (state: GameState): AvailableMove[] =>
+    state.availableCards
       .flatMap(x => x.visibleCards)
       .filter(x => x != null)
-      .map(card => new ReserveDevelopmentCardCommand({ card }));
+      .map(card => ({ move: "reserveDevelopmentCard", args: [card] }));
 }

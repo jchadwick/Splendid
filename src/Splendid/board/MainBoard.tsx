@@ -18,7 +18,7 @@ const useStyles = makeStyles(() =>
       color: "#000",
       backgroundColor: "#fff",
       fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-      width: "100%",
+      width: "calc(100% - 310px)",
       height: "100vh",
       display: "grid",
       gridColumnGap: 5,
@@ -235,25 +235,32 @@ const PlayerOverview = ({
       {player.name} {isCurrentPlayer && "(Current)"}{" "}
     </div>
     <div className="inventory">
-      <PlayerInventory
-        reservedCards={player.reservedCards}
-        tokens={player.tokens}
-      />
+      <PlayerInventory player={player} />
     </div>
   </div>
 );
 
-const PlayerInventory = ({ reservedCards, tokens }) => (
+interface PlayerInventoryProps {
+  player: Player;
+}
+
+const PlayerInventory = ({
+  player: { playedCards, reservedCards, tokens }
+}: PlayerInventoryProps) => (
   <div itemProp="inventory">
     <div className="cards">
-      <div className="subtitle">Cards</div>
+      <div className="subtitle">Reserved Cards</div>
       <div itemProp="card-count" data-value={reservedCards.length} />
+    </div>
+    <div className="cards">
+      <div className="subtitle">Played Cards</div>
+      <div itemProp="card-count" data-value={playedCards.length} />
     </div>
     <div className="tokens">
       <div className="subtitle">Tokens</div>
 
       {Object.keys(tokens).map(resource => (
-        <div itemProp="token">
+        <div key={resource} itemProp="token">
           <div itemProp="resource" data-value={resource}></div>
           <div itemProp="count" data-value={tokens[resource]}></div>
         </div>

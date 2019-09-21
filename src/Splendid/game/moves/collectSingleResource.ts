@@ -1,5 +1,9 @@
 import { GameState, ResourceType, NativeResourceTypes } from "../../../Model";
-import { PlayerAction, PlayerActionCommand } from "./PlayerAction";
+import {
+  PlayerAction,
+  PlayerActionCommand,
+  AvailableMove
+} from "./PlayerAction";
 import { findCurrentPlayer } from "../../../util";
 
 export interface CollectSingleResource extends PlayerAction {
@@ -21,8 +25,8 @@ export class CollectSingleResourceCommand extends PlayerActionCommand<
     return state;
   }
 
-  static readonly getAvailableActions = (gameState: GameState) =>
-    NativeResourceTypes.filter(type => gameState.availableTokens[type] >= 2)
+  static readonly getAvailableMoves = (state: GameState): AvailableMove[] =>
+    NativeResourceTypes.filter(type => state.availableTokens[type] >= 2)
       .map(x => ResourceType[x])
-      .map(resource => new CollectSingleResourceCommand({ resource }));
+      .map(resource => ({ move: "collectSingleResource", args: [resource] }));
 }

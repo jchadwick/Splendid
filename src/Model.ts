@@ -59,7 +59,6 @@ export interface Player {
   reservedCards: DevelopmentCard[];
   tokens: ResourceCount;
   prestigePoints: number;
-  totalResources: ResourceTotals;
 }
 
 export interface DevelopmentCardRow {

@@ -1,11 +1,14 @@
 import { GameState } from "../../../Model";
+import { moves } from "./index";
 
 export interface PlayerAction {}
 
 type PlayerActionCommandType = typeof PlayerActionCommand;
 
+export type AvailableMove = { move: keyof typeof moves; args: any[] };
+
 export interface PlayerActionCommandStatic extends PlayerActionCommandType {
-  getAvailableActions(gameState: GameState): PlayerActionCommand[];
+  getAvailableMoves(gameState: GameState): AvailableMove[];
 }
 
 export abstract class PlayerActionCommand<T = any> {

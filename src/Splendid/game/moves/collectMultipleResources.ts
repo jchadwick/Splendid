@@ -1,5 +1,9 @@
 import { GameState, ResourceType, NativeResourceTypes } from "../../../Model";
-import { PlayerActionCommand, PlayerAction } from "./PlayerAction";
+import {
+  PlayerActionCommand,
+  PlayerAction,
+  AvailableMove
+} from "./PlayerAction";
 import { findCurrentPlayer } from "../../../util";
 
 export interface CollectMultipleResources extends PlayerAction {
@@ -21,7 +25,7 @@ export class CollectMultipleResourcesCommand extends PlayerActionCommand<
     return state;
   }
 
-  static readonly getAvailableActions = (state: GameState) => {
+  static readonly getAvailableMoves = (state: GameState): AvailableMove[] => {
     const availableResources = NativeResourceTypes.filter(
       type => state.availableTokens[type] > 0
     ).map(x => ResourceType[x] as ResourceType);
@@ -40,8 +44,9 @@ export class CollectMultipleResourcesCommand extends PlayerActionCommand<
       }
     }
 
-    return actions.map(
-      resources => new CollectMultipleResourcesCommand({ resources })
-    );
+    return actions.map(resources => ({
+      move: "collectMultipleResources",
+      args: [resources]
+    }));
   };
 }

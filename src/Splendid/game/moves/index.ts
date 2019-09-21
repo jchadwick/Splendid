@@ -9,17 +9,20 @@ interface GameActionHandler {
   (G: GameState, ctx: GameContext, ...args): GameState;
 }
 
+export const getAvailableMoves = (state: GameState) =>
+  [
+    CollectMultipleResourcesCommand,
+    CollectSingleResourceCommand,
+    PurchaseDevelopmentCardCommand,
+    ReserveDevelopmentCardCommand
+  ].flatMap(cmd => cmd.getAvailableMoves(state));
+
 const executeCommand = (
   state: GameState,
   ctx: GameContext,
   CommandType: { new (...args): PlayerActionCommand },
   args?
 ): GameState => {
-  console.log(
-    `Player ${ctx.currentPlayer} executes ${
-      CommandType.name
-    } with ${JSON.stringify(args)}`
-  );
   const cmd = new CommandType(args);
   return cmd.execute(state);
 };

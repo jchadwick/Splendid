@@ -19,11 +19,7 @@ export const generatePlayer = async (): Promise<Player> => {
     playedCards: [],
     reservedCards: [],
     tokens: createResourceCollection(),
-    prestigePoints: 0,
-    totalResources: {
-      cards: createResourceCollection(),
-      tokens: createResourceCollection()
-    }
+    prestigePoints: 0
   } as Player;
 };
 

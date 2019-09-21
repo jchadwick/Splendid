@@ -1,5 +1,5 @@
-import { ResourceTotals } from "../Model";
-import { calculatePayment, hasRequiredResources, deduct } from "./utils";
+import { ResourceTotals, ResourceCount } from "../Model";
+import { calculatePayment, hasRequiredResources, deduct, add } from "./utils";
 import cases from "jest-in-case";
 
 const Free: ResourceTotals = { tokens: {}, cards: {} };
@@ -252,9 +252,15 @@ describe("Utilities", () => {
     });
   });
 
-  describe("mergeResources", () => {
+  describe("add", () => {
     it("should add resources to an existing set of resources", () => {
-      //mergeResources;
+      expect(
+        add({ Diamond: 1, Ruby: 2 }, { Diamond: 2, Wild: 1 })
+      ).toMatchObject({
+        Diamond: 3,
+        Ruby: 2,
+        Wild: 1
+      });
     });
   });
 });

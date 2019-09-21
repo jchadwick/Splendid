@@ -154,7 +154,7 @@ export const hasRequiredResources = (
 const requiresAdditionalResources = (target: ResourceCount | undefined) =>
   target == null ? false : Object.keys(target).some(key => target[key] < 0);
 
-export const mergeResources = (
+export const add = (
   target: ResourceCount,
   toMerge: ResourceCount
 ): ResourceCount =>
@@ -215,15 +215,18 @@ export const calculatePlayerResourceTotals = ({
   tokens
 }: Player) => ({
   tokens: tokens,
-  cards: playedCards.reduce(
+  cards: calculateCardResources(playedCards)
+});
+
+export const calculateCardResources = (cards: DevelopmentCard[]) =>
+  cards.reduce(
     (cardResources, card) => {
       cardResources[card.resourceType] =
         (cardResources[card.resourceType] || 0) + 1;
       return cardResources;
     },
     {} as ResourceCount
-  )
-});
+  );
 
 export const calculatePlayerPrestigePoints = ({
   patrons,
@@ -239,7 +242,6 @@ export const recalculatePlayerTotals = (
 ): void => {
   if ("id" in playerOrState) {
     const player = playerOrState;
-    player.totalResources = calculatePlayerResourceTotals(player);
     player.prestigePoints = calculatePlayerPrestigePoints(player);
   } else {
     playerOrState.players.forEach(recalculatePlayerTotals);
