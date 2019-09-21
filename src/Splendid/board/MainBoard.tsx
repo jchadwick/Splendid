@@ -34,7 +34,7 @@ const useStyles = makeStyles(() =>
     tokens: {
       gridArea: "tokens",
       display: "flex",
-      alignContent: "center",
+      alignItems: "center",
       justifyContent: "space-around",
 
       "& [itemProp='token']": {
