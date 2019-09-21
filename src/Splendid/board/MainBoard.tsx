@@ -24,7 +24,7 @@ const useStyles = makeStyles(() =>
       gridColumnGap: 5,
       gridRowGap: 5,
       gridTemplateColumns: "auto 25%",
-      gridTemplateRows: "5% auto 10%",
+      gridTemplateRows: "7em auto 10em",
       gridTemplateAreas: `
         "tokens    player-list"
         "board     player-list"
@@ -70,6 +70,7 @@ const useStyles = makeStyles(() =>
       backgroundColor: "#fff",
       padding: "0.4em"
     },
+
     inventory: {
       gridArea: "inventory"
     }
@@ -129,29 +130,16 @@ export const MainBoard: React.FC<IBoardProps<GameState, Moves>> = props => {
         ))}
       </div>
       <div id="board" className={classes.board}>
-        <div className={`patron cardRow`}>
-          <div className="patron card">
-            <span>Patron</span>
-          </div>
-          <div className="patron card">
-            <span>Patron</span>
-          </div>
-          <div className="patron card">
-            <span>Patron</span>
-          </div>
-          <div className="patron card">
-            <span>Patron</span>
-          </div>
-          <div className="patron card">
-            <span>Patron</span>
-          </div>
-        </div>
         {availableCards.map((row, rowIndex) => (
           <div key={String(rowIndex)} className="cardRow">
             <div
               className="stock card valid-action"
               onClick={() =>
-                moves.reserveDevelopmentCard(row.stock[row.stock.length - 1])
+                row.stock.length
+                  ? moves.reserveDevelopmentCard(
+                      row.stock[row.stock.length - 1]
+                    )
+                  : false
               }
             >
               <span>{row.stock.length}</span>
@@ -180,6 +168,23 @@ export const MainBoard: React.FC<IBoardProps<GameState, Moves>> = props => {
             player={player}
           />
         ))}
+        <div className={`patronRow`}>
+          <div className="patron card">
+            <span>Patron</span>
+          </div>
+          <div className="patron card">
+            <span>Patron</span>
+          </div>
+          <div className="patron card">
+            <span>Patron</span>
+          </div>
+          <div className="patron card">
+            <span>Patron</span>
+          </div>
+          <div className="patron card">
+            <span>Patron</span>
+          </div>
+        </div>
       </div>
       <div id="inventory" className={classes.inventory}>
         <UserPlayerInventory
@@ -201,19 +206,21 @@ const DevelopmentCard = ({
   <div
     className={`card ${card.id ? "valid-action" : ""}`}
     itemProp="card"
-    onClick={() => onSelected(card)}
+    onClick={() => (card.id ? onSelected(card) : false)}
   >
     <div itemProp="resource" data-value={card.resourceType}></div>
-    {card.prestigePoints > 0 && (
+    {card && card.prestigePoints > 0 && (
       <div itemProp="prestigePoints" data-value={card.prestigePoints}></div>
     )}
     <div itemProp="cost">
-      {Object.keys(card.cost.tokens).map(resource => (
-        <div key={resource} itemProp="token">
-          <div itemProp="resource" data-value={resource}></div>
-          <div itemProp="count" data-value={card.cost.tokens[resource]}></div>
-        </div>
-      ))}
+      {card &&
+        card.cost &&
+        Object.keys(card.cost.tokens).map(resource => (
+          <div key={resource} itemProp="token">
+            <div itemProp="resource" data-value={resource}></div>
+            <div itemProp="count" data-value={card.cost.tokens[resource]}></div>
+          </div>
+        ))}
     </div>
   </div>
 );
@@ -226,14 +233,18 @@ const PlayerOverview = ({
   player: Player;
 }) => (
   <div
-    className="player"
+    className={`player ${isCurrentPlayer && "active"}`}
     itemScope
     itemType="urn:x:player"
     itemID={String(player.id)}
   >
     <div itemProp="name">
-      {player.name} {isCurrentPlayer && "(Current)"}{" "}
+      {player.name}{" "}
+      {isCurrentPlayer && (
+        <span dangerouslySetInnerHTML={{ __html: "&Star;" }} />
+      )}
     </div>
+    <div itemProp="prestigePoints">{player.prestigePoints}</div>
     <div className="inventory">
       <PlayerInventory player={player} />
     </div>
