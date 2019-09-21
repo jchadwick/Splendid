@@ -81,6 +81,8 @@ export class PurchaseDevelopmentCardCommand extends PlayerActionCommand<
     // add the card to the collection of played cards
     player.playedCards.push(card);
 
+    player.prestigePoints = (player.prestigePoints || 0) + card.prestigePoints;
+
     return state;
   }
 
