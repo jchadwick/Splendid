@@ -77,7 +77,9 @@ const useStyles = makeStyles(() =>
   })
 );
 
-export const MainBoard: React.FC<IBoardProps<GameState, Moves>> = props => {
+export const MainBoard: React.FC<
+  Partial<IBoardProps<GameState, Moves>>
+> = props => {
   const {
     G: { availableCards, availableTokens, currentPlayerId, players },
     moves
