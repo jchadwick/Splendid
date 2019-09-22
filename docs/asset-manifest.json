@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/static/css/main.8b0f5946.chunk.css",
-    "main.js": "/static/js/main.57cf8738.chunk.js",
-    "main.js.map": "/static/js/main.57cf8738.chunk.js.map",
-    "runtime~main.js": "/static/js/runtime~main.e595960f.js",
-    "runtime~main.js.map": "/static/js/runtime~main.e595960f.js.map",
-    "static/js/2.9393a584.chunk.js": "/static/js/2.9393a584.chunk.js",
-    "static/js/2.9393a584.chunk.js.map": "/static/js/2.9393a584.chunk.js.map",
-    "index.html": "/index.html",
-    "precache-manifest.1664714436f7d6332e3087fdd373f17f.js": "/precache-manifest.1664714436f7d6332e3087fdd373f17f.js",
-    "service-worker.js": "/service-worker.js",
-    "static/css/main.8b0f5946.chunk.css.map": "/static/css/main.8b0f5946.chunk.css.map",
-    "static/media/board.css": "/static/media/stock_card.3b7119c9.svg"
+    "main.css": "/Splendid/static/css/main.da0e5485.chunk.css",
+    "main.js": "/Splendid/static/js/main.34dfd9a4.chunk.js",
+    "main.js.map": "/Splendid/static/js/main.34dfd9a4.chunk.js.map",
+    "runtime~main.js": "/Splendid/static/js/runtime~main.ae415d3a.js",
+    "runtime~main.js.map": "/Splendid/static/js/runtime~main.ae415d3a.js.map",
+    "static/js/2.52c0ffe3.chunk.js": "/Splendid/static/js/2.52c0ffe3.chunk.js",
+    "static/js/2.52c0ffe3.chunk.js.map": "/Splendid/static/js/2.52c0ffe3.chunk.js.map",
+    "index.html": "/Splendid/index.html",
+    "precache-manifest.1afb10e6ac03487705b9f221eafd8cc5.js": "/Splendid/precache-manifest.1afb10e6ac03487705b9f221eafd8cc5.js",
+    "service-worker.js": "/Splendid/service-worker.js",
+    "static/css/main.da0e5485.chunk.css.map": "/Splendid/static/css/main.da0e5485.chunk.css.map",
+    "static/media/board.css": "/Splendid/static/media/stock_card.3b7119c9.svg"
   }
 }

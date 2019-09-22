@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { Moves } from "../game";
 import {
   DevelopmentCard as DevelopmentCardModel,
@@ -11,6 +11,16 @@ import { IBoardProps } from "boardgame.io/react";
 
 import "./board.css";
 import { Box } from "@material-ui/core";
+import {
+  findCurrentPlayer,
+  findPlayer,
+  hasRequiredResources,
+  calculatePlayerResourceTotals
+} from "../../util";
+import { styled } from "@material-ui/styles";
+
+const Column = styled(Box)({ display: "flex", flexDirection: "column" });
+const Row = styled(Box)({ display: "flex", flexDirection: "row" });
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -24,7 +34,7 @@ const useStyles = makeStyles(() =>
       gridColumnGap: 5,
       gridRowGap: 5,
       gridTemplateColumns: "auto 25%",
-      gridTemplateRows: "7em auto 10em",
+      gridTemplateRows: "6em auto 13em",
       gridTemplateAreas: `
         "tokens    player-list"
         "board     player-list"
@@ -72,7 +82,8 @@ const useStyles = makeStyles(() =>
     },
 
     inventory: {
-      gridArea: "inventory"
+      gridArea: "inventory",
+      display: "flex"
     }
   })
 );
@@ -81,15 +92,27 @@ export const MainBoard: React.FC<
   Partial<IBoardProps<GameState, Moves>>
 > = props => {
   const {
+    G: state,
     G: { availableCards, availableTokens, currentPlayerId, players },
-    moves
+    playerID,
+    moves,
+    step
   } = props;
 
   const classes = useStyles({});
 
+  const userPlayerId = playerID || players[0].id;
+
   const [selectedTokens, setSelectedTokens] = useState([]);
-  const currentPlayer = players[currentPlayerId];
-  const userPlayer = currentPlayer;
+  const currentPlayer = findCurrentPlayer(state);
+  const userPlayer: Player = findPlayer(players, userPlayerId);
+  const otherPlayers = players.filter(x => x.id !== userPlayerId);
+
+  useEffect(() => {
+    if (currentPlayerId != userPlayerId) {
+      step();
+    }
+  }, [currentPlayerId]);
 
   const selectToken = useCallback(
     token => {
@@ -121,13 +144,23 @@ export const MainBoard: React.FC<
     [moves, selectedTokens]
   );
 
+  const selectDevelopmentCard = (card: DevelopmentCardModel): void => {
+    const playerResources = calculatePlayerResourceTotals(currentPlayer);
+
+    if (hasRequiredResources(card.cost, playerResources)) {
+      moves.purchaseDevelopmentCard(card);
+    } else {
+      moves.reserveDevelopmentCard(card);
+    }
+  };
+
   return (
     <div id="container" className={classes.container}>
-      <div className={classes.tokens}>
+      <div id="tokens" className={classes.tokens}>
         {Object.keys(availableTokens).map(token => (
           <div key={token} itemProp="token" onClick={() => selectToken(token)}>
-            <div itemProp="resource" data-value={token}></div>
-            <div itemProp="count" data-value={availableTokens[token]}></div>
+            <div itemProp="resource" data-value={token} />
+            <div itemProp="count" data-value={availableTokens[token]} />
           </div>
         ))}
       </div>
@@ -138,9 +171,7 @@ export const MainBoard: React.FC<
               className="stock card valid-action"
               onClick={() =>
                 row.stock.length
-                  ? moves.reserveDevelopmentCard(
-                      row.stock[row.stock.length - 1]
-                    )
+                  ? selectDevelopmentCard(row.stock[row.stock.length - 1])
                   : false
               }
             >
@@ -156,14 +187,14 @@ export const MainBoard: React.FC<
                 <DevelopmentCard
                   key={card.id || `${row.level}${idx}`}
                   card={card}
-                  onSelected={() => moves.reserveDevelopmentCard(card)}
+                  onSelected={selectDevelopmentCard}
                 />
               ))}
           </div>
         ))}
       </div>
       <div id="player-list" className={classes.playerList}>
-        {players.map((player: Player) => (
+        {otherPlayers.map((player: Player) => (
           <PlayerOverview
             key={player.id}
             isCurrentPlayer={player === currentPlayer}
@@ -189,10 +220,13 @@ export const MainBoard: React.FC<
         </div>
       </div>
       <div id="inventory" className={classes.inventory}>
-        <UserPlayerInventory
-          player={userPlayer}
-          onPlayReservedCard={card => moves.purchaseDevelopmentCard(card)}
-        />
+        {userPlayer && (
+          <UserPlayerInventory
+            isCurrentPlayer={userPlayer.id === currentPlayerId}
+            player={userPlayer}
+            onPlayReservedCard={card => moves.purchaseDevelopmentCard(card)}
+          />
+        )}
       </div>
     </div>
   );
@@ -200,27 +234,29 @@ export const MainBoard: React.FC<
 
 const DevelopmentCard = ({
   card,
-  onSelected
+  onSelected,
+  canSelect
 }: {
   card: DevelopmentCardModel;
+  canSelect?: boolean;
   onSelected(card: DevelopmentCardModel): void;
 }) => (
   <div
-    className={`card ${card.id ? "valid-action" : ""}`}
+    className={`card ${card.id || canSelect ? "valid-action" : ""}`}
     itemProp="card"
-    onClick={() => (card.id ? onSelected(card) : false)}
+    onClick={() => (card.id || canSelect ? onSelected(card) : false)}
   >
-    <div itemProp="resource" data-value={card.resourceType}></div>
+    <div itemProp="resource" data-value={card.resourceType} />
     {card && card.prestigePoints > 0 && (
-      <div itemProp="prestigePoints" data-value={card.prestigePoints}></div>
+      <div itemProp="prestigePoints" data-value={card.prestigePoints} />
     )}
     <div itemProp="cost">
       {card &&
         card.cost &&
         Object.keys(card.cost.tokens).map(resource => (
           <div key={resource} itemProp="token">
-            <div itemProp="resource" data-value={resource}></div>
-            <div itemProp="count" data-value={card.cost.tokens[resource]}></div>
+            <div itemProp="resource" data-value={resource} />
+            <div itemProp="count" data-value={card.cost.tokens[resource]} />
           </div>
         ))}
     </div>
@@ -257,45 +293,104 @@ interface PlayerInventoryProps {
   player: Player;
 }
 
+interface PlayedCardProps {
+  card: DevelopmentCardModel;
+}
+
+const PlayedCard = ({ card }: PlayedCardProps) => (
+  <Box width="2em" height="3em">
+    <div itemProp="resource" data-value={card.resourceType} />
+    <div itemProp="prestigePoints" data-value={card.prestigePoints} />
+  </Box>
+);
+
 const PlayerInventory = ({
   player: { playedCards, reservedCards, tokens }
 }: PlayerInventoryProps) => (
   <div itemProp="inventory">
-    <div className="cards">
-      <div className="subtitle">Reserved Cards</div>
-      <div itemProp="card-count" data-value={reservedCards.length} />
-    </div>
-    <div className="cards">
-      <div className="subtitle">Played Cards</div>
-      <div itemProp="card-count" data-value={playedCards.length} />
-    </div>
+    <Row justifyContent="space-between" flexWrap="wrap">
+      <Column display="flex" alignContent="center" justifyContent="center">
+        {reservedCards.length}
+      </Column>
+      {playedCards.map(card => (
+        <PlayedCard card={card} />
+      ))}
+    </Row>
     <div className="tokens">
       <div className="subtitle">Tokens</div>
 
-      {Object.keys(tokens).map(resource => (
-        <div key={resource} itemProp="token">
-          <div itemProp="resource" data-value={resource}></div>
-          <div itemProp="count" data-value={tokens[resource]}></div>
-        </div>
-      ))}
+      {Object.keys(tokens).map(
+        resource =>
+          tokens[resource] > 0 && (
+            <div key={resource} itemProp="token">
+              <div itemProp="resource" data-value={resource} />
+              <div itemProp="count" data-value={tokens[resource]} />
+            </div>
+          )
+      )}
     </div>
   </div>
 );
 
 const UserPlayerInventory = ({
+  isCurrentPlayer,
   player,
   onPlayReservedCard
 }: {
+  isCurrentPlayer: boolean;
   player: Player;
   onPlayReservedCard(card: DevelopmentCardModel): void;
 }) => (
-  <Box display="flex" flexDirection="row">
-    {player.reservedCards.map(card => (
-      <DevelopmentCard
-        key={card.id}
-        card={card}
-        onSelected={onPlayReservedCard}
-      />
-    ))}
-  </Box>
+  <Column
+    position="relative"
+    flexGrow={1}
+    className={isCurrentPlayer && "active"}
+  >
+    <h2>
+      {player.name}
+      <Box
+        className="prestigePoints"
+        position="absolute"
+        top="1rem"
+        right="1rem"
+      >
+        {player.prestigePoints}
+      </Box>
+    </h2>
+    <Row>
+      <Row border="1px ridge">
+        <Row id="playerTokens">
+          {Object.keys(player.tokens).map(
+            resource =>
+              player.tokens[resource] > 0 && (
+                <div key={resource} itemProp="token">
+                  <div itemProp="resource" data-value={resource} />
+                  <div itemProp="count" data-value={player.tokens[resource]} />
+                </div>
+              )
+          )}
+        </Row>
+        <Row id="reservedCards">
+          {player.reservedCards.map(card => (
+            <DevelopmentCard
+              key={card.id}
+              card={card}
+              onSelected={onPlayReservedCard}
+            />
+          ))}
+        </Row>
+      </Row>
+      <Row>
+        <Row id="playedCards">
+          {player.playedCards.map(card => (
+            <DevelopmentCard
+              key={card.id}
+              card={card}
+              onSelected={() => null}
+            />
+          ))}
+        </Row>
+      </Row>
+    </Row>
+  </Column>
 );

@@ -2,6 +2,7 @@
   "name": "board",
   "version": "0.1.0",
   "private": true,
+  "homepage": "http://www.jesschadwick.com/Splendid/",
   "dependencies": {
     "@material-ui/core": "^4.4.1",
     "@material-ui/icons": "^4.4.1",
