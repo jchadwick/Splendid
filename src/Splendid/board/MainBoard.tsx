@@ -21,6 +21,14 @@ import { styled } from "@material-ui/styles";
 
 const Column = styled(Box)({ display: "flex", flexDirection: "column" });
 const Row = styled(Box)({ display: "flex", flexDirection: "row" });
+const Overlay = styled("div")({
+  position: "absolute",
+  top: 0,
+  left: 0,
+  width: "100vw",
+  height: ({ isActive }: { isActive: boolean }) => `${isActive ? 100 : 0}vh`,
+  zIndex: 1000
+});
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -107,6 +115,7 @@ export const MainBoard: React.FC<
   const currentPlayer = findCurrentPlayer(state);
   const userPlayer: Player = findPlayer(players, userPlayerId);
   const otherPlayers = players.filter(x => x.id !== userPlayerId);
+  const isUserPlayersTurn = userPlayerId === currentPlayerId;
 
   useEffect(() => {
     if (currentPlayerId != userPlayerId) {
@@ -155,80 +164,88 @@ export const MainBoard: React.FC<
   };
 
   return (
-    <div id="container" className={classes.container}>
-      <div id="tokens" className={classes.tokens}>
-        {Object.keys(availableTokens).map(token => (
-          <div key={token} itemProp="token" onClick={() => selectToken(token)}>
-            <div itemProp="resource" data-value={token} />
-            <div itemProp="count" data-value={availableTokens[token]} />
-          </div>
-        ))}
-      </div>
-      <div id="board" className={classes.board}>
-        {availableCards.map((row, rowIndex) => (
-          <div key={String(rowIndex)} className="cardRow">
+    <>
+      <Overlay isActive={!isUserPlayersTurn} />
+      <div id="container" className={classes.container}>
+        <div id="tokens" className={classes.tokens}>
+          {Object.keys(availableTokens).map(token => (
             <div
-              className="stock card valid-action"
-              onClick={() =>
-                row.stock.length
-                  ? selectDevelopmentCard(row.stock[row.stock.length - 1])
-                  : false
-              }
+              key={token}
+              itemProp="token"
+              onClick={() => selectToken(token)}
             >
-              <span>{row.stock.length}</span>
+              <div itemProp="resource" data-value={token} />
+              <div itemProp="count" data-value={availableTokens[token]} />
             </div>
-            {Array(4)
-              .fill(0)
-              .map(
-                (_, i) =>
-                  row.visibleCards[i] || ({ id: null } as DevelopmentCardModel)
-              )
-              .map((card, idx) => (
-                <DevelopmentCard
-                  key={card.id || `${row.level}${idx}`}
-                  card={card}
-                  onSelected={selectDevelopmentCard}
-                />
-              ))}
-          </div>
-        ))}
-      </div>
-      <div id="player-list" className={classes.playerList}>
-        {otherPlayers.map((player: Player) => (
-          <PlayerOverview
-            key={player.id}
-            isCurrentPlayer={player === currentPlayer}
-            player={player}
-          />
-        ))}
-        <div className={`patronRow`}>
-          <div className="patron card">
-            <span>Patron</span>
-          </div>
-          <div className="patron card">
-            <span>Patron</span>
-          </div>
-          <div className="patron card">
-            <span>Patron</span>
-          </div>
-          <div className="patron card">
-            <span>Patron</span>
-          </div>
-          <div className="patron card">
-            <span>Patron</span>
+          ))}
+        </div>
+        <div id="board" className={classes.board}>
+          {availableCards.map((row, rowIndex) => (
+            <div key={String(rowIndex)} className="cardRow">
+              <div
+                className="stock card valid-action"
+                onClick={() =>
+                  row.stock.length
+                    ? selectDevelopmentCard(row.stock[row.stock.length - 1])
+                    : false
+                }
+              >
+                <span>{row.stock.length}</span>
+              </div>
+              {Array(4)
+                .fill(0)
+                .map(
+                  (_, i) =>
+                    row.visibleCards[i] ||
+                    ({ id: null } as DevelopmentCardModel)
+                )
+                .map((card, idx) => (
+                  <DevelopmentCard
+                    key={card.id || `${row.level}${idx}`}
+                    card={card}
+                    onSelected={selectDevelopmentCard}
+                  />
+                ))}
+            </div>
+          ))}
+        </div>
+        <div id="player-list" className={classes.playerList}>
+          {otherPlayers.map((player: Player) => (
+            <PlayerOverview
+              key={player.id}
+              isCurrentPlayer={player === currentPlayer}
+              player={player}
+            />
+          ))}
+          <div className={`patronRow`}>
+            <div className="patron card">
+              <span>Patron</span>
+            </div>
+            <div className="patron card">
+              <span>Patron</span>
+            </div>
+            <div className="patron card">
+              <span>Patron</span>
+            </div>
+            <div className="patron card">
+              <span>Patron</span>
+            </div>
+            <div className="patron card">
+              <span>Patron</span>
+            </div>
           </div>
         </div>
+        <div id="inventory" className={classes.inventory}>
+          {userPlayer && (
+            <UserPlayerInventory
+              isCurrentPlayer={userPlayer.id === currentPlayerId}
+              player={userPlayer}
+              onPlayReservedCard={card => moves.purchaseDevelopmentCard(card)}
+            />
+          )}
+        </div>
       </div>
-      <div id="inventory" className={classes.inventory}>
-        {userPlayer && (
-          <UserPlayerInventory
-            isCurrentPlayer={userPlayer.id === currentPlayerId}
-            player={userPlayer}
-            onPlayReservedCard={card => moves.purchaseDevelopmentCard(card)}
-          />
-        )}
-      </div>
-    </div>
+    </>
   );
 };
 
