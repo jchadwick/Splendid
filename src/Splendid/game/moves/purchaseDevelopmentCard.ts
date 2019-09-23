@@ -49,7 +49,7 @@ export class PurchaseDevelopmentCardCommand extends PlayerActionCommand<
       row.visibleCards.some(x => x && x.id === card.id)
     );
 
-    const reservedCard = player.reservedCards.find(x => x.id === card.id);
+    let reservedCard = player.reservedCards.find(x => x.id === card.id);
 
     if (!reservedCard && !isOnTable) {
       throw new Error(PurchaseDevelopmentCardCommand.UNAVAILABLE_CARD);
@@ -64,19 +64,11 @@ export class PurchaseDevelopmentCardCommand extends PlayerActionCommand<
     // take it from the table
     if (isOnTable) {
       takeDevelopmentCard(state, card);
+      reservedCard = card;
     }
-    // or take it from the player's hand
-    else if (reservedCard) {
-      player.reservedCards.splice(
-        player.reservedCards.indexOf(reservedCard),
-        1
-      );
-    }
-    // this should never happen since we've already checked for it,
-    // but just to be extra careful...
-    else {
-      throw Error("Impossible situation");
-    }
+
+    // take it from the player's hand
+    player.reservedCards.splice(player.reservedCards.indexOf(reservedCard), 1);
 
     // add the card to the collection of played cards
     player.playedCards.push(card);
@@ -88,7 +80,7 @@ export class PurchaseDevelopmentCardCommand extends PlayerActionCommand<
 
   static readonly getAvailableMoves = (state: GameState): AvailableMove[] => {
     const visibleCards = state.availableCards.flatMap(x => x.visibleCards);
-    const reservedCards = findCurrentPlayer(state).reservedCards;
+    const { reservedCards } = findCurrentPlayer(state);
     const accessibleCards = [...visibleCards, ...reservedCards].filter(
       x => x != null
     );

@@ -4,13 +4,22 @@ import {
   DevelopmentCard as DevelopmentCardModel,
   GameState,
   ResourceType,
-  Player
+  Player,
+  GameResults
 } from "../../Model";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
 import { IBoardProps } from "boardgame.io/react";
 
 import "./board.css";
-import { Box } from "@material-ui/core";
+import {
+  Box,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Typography,
+  DialogActions,
+  Button
+} from "@material-ui/core";
 import {
   findCurrentPlayer,
   findPlayer,
@@ -102,6 +111,7 @@ export const MainBoard: React.FC<
   const {
     G: state,
     G: { availableCards, availableTokens, currentPlayerId, players },
+    ctx: { gameover },
     playerID,
     moves,
     step
@@ -121,7 +131,7 @@ export const MainBoard: React.FC<
     if (currentPlayerId != userPlayerId) {
       step();
     }
-  }, [currentPlayerId]);
+  }, [step, currentPlayerId, userPlayerId]);
 
   const selectToken = useCallback(
     token => {
@@ -165,6 +175,13 @@ export const MainBoard: React.FC<
 
   return (
     <>
+      {gameover && (
+        <GameOver
+          onClose={() => console.log("GameOver closed")}
+          results={gameover}
+          userPlayer={userPlayer}
+        />
+      )}
       <Overlay isActive={!isUserPlayersTurn} />
       <div id="container" className={classes.container}>
         <div id="tokens" className={classes.tokens}>
@@ -248,6 +265,32 @@ export const MainBoard: React.FC<
     </>
   );
 };
+
+interface GameOverProps {
+  userPlayer: Player;
+  results: GameResults;
+  onClose(): any;
+}
+
+const GameOver = ({ results, onClose, userPlayer }: GameOverProps) => (
+  <Dialog open onClose={onClose} aria-labelledby="customized-dialog-title">
+    <DialogTitle>GAME OVER</DialogTitle>
+    <DialogContent dividers>
+      <Typography gutterBottom>
+        {results.winner === userPlayer ? (
+          <Typography>YOU WIN!</Typography>
+        ) : (
+          <Typography>You lose - get off my property</Typography>
+        )}
+      </Typography>
+    </DialogContent>
+    <DialogActions>
+      <Button onClick={onClose} color="primary">
+        New Game
+      </Button>
+    </DialogActions>
+  </Dialog>
+);
 
 const DevelopmentCard = ({
   card,
@@ -349,6 +392,11 @@ const PlayerInventory = ({
   </div>
 );
 
+const CurrentPlayerName = styled("h3")({
+  writingMode: "vertical-lr",
+  textOrientation: "upright"
+});
+
 const UserPlayerInventory = ({
   isCurrentPlayer,
   player,
@@ -358,25 +406,14 @@ const UserPlayerInventory = ({
   player: Player;
   onPlayReservedCard(card: DevelopmentCardModel): void;
 }) => (
-  <Column
-    position="relative"
-    flexGrow={1}
-    className={isCurrentPlayer && "active"}
-  >
-    <h2>
-      {player.name}
-      <Box
-        className="prestigePoints"
-        position="absolute"
-        top="1rem"
-        right="1rem"
-      >
-        {player.prestigePoints}
-      </Box>
-    </h2>
+  <Row position="relative" flexGrow={1} className={isCurrentPlayer && "active"}>
+    <Box className="prestigePoints" position="absolute" top="1rem" right="1rem">
+      {player.prestigePoints}
+    </Box>
+    <CurrentPlayerName>{player.name}</CurrentPlayerName>
     <Row>
-      <Row border="1px ridge">
-        <Row id="playerTokens">
+      <Row border="1px solid #333">
+        <Row id="playerTokens" fontSize="160%" flexWrap="wrap" width="5rem">
           {Object.keys(player.tokens).map(
             resource =>
               player.tokens[resource] > 0 && (
@@ -399,15 +436,49 @@ const UserPlayerInventory = ({
       </Row>
       <Row>
         <Row id="playedCards">
-          {player.playedCards.map(card => (
-            <DevelopmentCard
-              key={card.id}
-              card={card}
-              onSelected={() => null}
-            />
+          {groupCards(player.playedCards).map(({ resourceType, cards }) => (
+            <Box
+              className={`cardStack ${resourceType}`}
+              position="relative"
+              width="9em"
+            >
+              {cards.map((card, idx) => (
+                <Box
+                  position="absolute"
+                  top={`${idx * 3}em`}
+                  width="7em"
+                  paddingRight="1em"
+                >
+                  <DevelopmentCard
+                    key={card.id}
+                    card={card}
+                    onSelected={() => null}
+                  />
+                </Box>
+              ))}
+            </Box>
           ))}
         </Row>
       </Row>
     </Row>
-  </Column>
+  </Row>
 );
+
+type DevelopmentCardGroup = {
+  resourceType: ResourceType;
+  cards: DevelopmentCardModel[];
+};
+
+const groupCards = (cards: DevelopmentCardModel[]): DevelopmentCardGroup[] =>
+  cards.reduce((grouped: DevelopmentCardGroup[], card) => {
+    const { resourceType } = card;
+    let group = grouped.find(x => x.resourceType === resourceType);
+
+    if (group == null) {
+      grouped.push({ resourceType, cards: [card] });
+    } else {
+      group.cards.push(card);
+    }
+
+    return grouped;
+  }, []);

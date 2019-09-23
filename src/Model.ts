@@ -73,3 +73,8 @@ export interface GameState {
   players: Player[];
   currentPlayerId: string;
 }
+
+export interface GameResults {
+  winner: Player;
+  rankings: Player[];
+}

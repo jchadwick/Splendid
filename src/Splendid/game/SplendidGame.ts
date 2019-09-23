@@ -1,5 +1,5 @@
 import { Game } from "boardgame.io/core";
-import { GameState } from "../../Model";
+import { GameState, GameResults } from "../../Model";
 import moves from "./moves";
 import { initializeGame as setup } from "./initializeGame";
 import { populateVisibleCards } from "../../util";
@@ -20,11 +20,14 @@ export const SplendidGame = Game<GameState, Moves>({
       // TODO: evaluate patrons
       populateVisibleCards(G.availableCards);
     },
-    endGameIf: G => {
+    endGameIf: (G): GameResults | void => {
       const winners = G.players.filter(x => x.prestigePoints >= 15);
 
       if (winners.length) {
-        return { winner: winners[0].id };
+        const rankings = [...G.players].sort(
+          (a, b) => b.prestigePoints - a.prestigePoints
+        );
+        return { winner: winners[0], rankings };
       }
     }
   }
