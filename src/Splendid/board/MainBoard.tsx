@@ -128,7 +128,7 @@ export const MainBoard: React.FC<
   const isUserPlayersTurn = userPlayerId === currentPlayerId;
 
   useEffect(() => {
-    if (currentPlayerId != userPlayerId) {
+    if (currentPlayerId !== userPlayerId) {
       step();
     }
   }, [step, currentPlayerId, userPlayerId]);
