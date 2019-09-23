@@ -4,6 +4,7 @@ import { PurchaseDevelopmentCardCommand } from "./purchaseDevelopmentCard";
 import { ReserveDevelopmentCardCommand } from "./reserveDevelopmentCard";
 import { PlayerActionCommand } from "./PlayerAction";
 import { GameContext, GameState } from "../../../Model";
+import { findCurrentPlayer } from "../../../util";
 
 interface GameActionHandler {
   (G: GameState, ctx: GameContext, ...args): GameState;
@@ -23,11 +24,21 @@ const executeCommand = (
   CommandType: { new (...args): PlayerActionCommand },
   args?
 ): GameState => {
-  const cmd = new CommandType(args);
-  return cmd.execute(state);
+  try {
+    const cmd = new CommandType(args);
+    return cmd.execute(state);
+  } catch (err) {
+    console.error(err);
+    return state;
+  }
 };
 
 export const moves: { [key: string]: GameActionHandler } = {
+  triggerWin: g => {
+    const player = findCurrentPlayer(g);
+    player.prestigePoints = 15;
+    return g;
+  },
   collectMultipleResources: (G, ctx, resources) =>
     executeCommand(G, ctx, CollectMultipleResourcesCommand, {
       resources

@@ -177,7 +177,7 @@ export const MainBoard: React.FC<
     <>
       {gameover && (
         <GameOver
-          onClose={() => console.log("GameOver closed")}
+          onClose={() => window.location.reload()}
           results={gameover}
           userPlayer={userPlayer}
         />
@@ -330,66 +330,67 @@ const PlayerOverview = ({
   isCurrentPlayer: boolean;
   player: Player;
 }) => (
-  <div
+  <Column
     className={`player ${isCurrentPlayer && "active"}`}
     itemScope
     itemType="urn:x:player"
     itemID={String(player.id)}
   >
-    <div itemProp="name">
-      {player.name}{" "}
-      {isCurrentPlayer && (
-        <span dangerouslySetInnerHTML={{ __html: "&Star;" }} />
+    <Row>
+      <Box flexGrow={1} itemProp="name">
+        {player.name}
+      </Box>
+      <Box fontWeight={800}>{player.prestigePoints}</Box>
+    </Row>
+    <Box
+      className="tokens"
+      minHeight="4em"
+      fontSize="40%"
+      border="1px ridge #ccc"
+    >
+      {Object.keys(player.tokens).map(
+        resource =>
+          player.tokens[resource] > 0 && (
+            <div key={resource} itemProp="token">
+              <div itemProp="resource" data-value={resource} />
+              <div itemProp="count" data-value={player.tokens[resource]} />
+            </div>
+          )
       )}
-    </div>
-    <div itemProp="prestigePoints">{player.prestigePoints}</div>
-    <div className="inventory">
-      <PlayerInventory player={player} />
-    </div>
-  </div>
+    </Box>
+    <Row
+      className="inventory"
+      flexGrow={1}
+      minHeight="10em"
+      marginTop="1em"
+      border="1px ridge #ccc"
+    >
+      <Row justifyContent="space-between" flexWrap="wrap" fontSize="70%">
+        {player.playedCards.map(card => (
+          <PlayedCard card={card} />
+        ))}
+      </Row>
+    </Row>
+  </Column>
 );
-
-interface PlayerInventoryProps {
-  player: Player;
-}
-
 interface PlayedCardProps {
   card: DevelopmentCardModel;
 }
 
 const PlayedCard = ({ card }: PlayedCardProps) => (
-  <Box width="2em" height="3em">
+  <Box
+    width="3em"
+    height="4em"
+    borderRadius=".5em"
+    position="relative"
+    border="1px ridge #333"
+    margin="0 1em"
+    fontSize="70%"
+    padding=".5em"
+  >
     <div itemProp="resource" data-value={card.resourceType} />
     <div itemProp="prestigePoints" data-value={card.prestigePoints} />
   </Box>
-);
-
-const PlayerInventory = ({
-  player: { playedCards, reservedCards, tokens }
-}: PlayerInventoryProps) => (
-  <div itemProp="inventory">
-    <Row justifyContent="space-between" flexWrap="wrap">
-      <Column display="flex" alignContent="center" justifyContent="center">
-        {reservedCards.length}
-      </Column>
-      {playedCards.map(card => (
-        <PlayedCard card={card} />
-      ))}
-    </Row>
-    <div className="tokens">
-      <div className="subtitle">Tokens</div>
-
-      {Object.keys(tokens).map(
-        resource =>
-          tokens[resource] > 0 && (
-            <div key={resource} itemProp="token">
-              <div itemProp="resource" data-value={resource} />
-              <div itemProp="count" data-value={tokens[resource]} />
-            </div>
-          )
-      )}
-    </div>
-  </div>
 );
 
 const CurrentPlayerName = styled("h3")({

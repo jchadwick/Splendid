@@ -32,5 +32,3 @@ export const SplendidGame = Game<GameState, Moves>({
     }
   }
 });
-
-console.log(`Moves: ${SplendidGame.moveNames}`);
