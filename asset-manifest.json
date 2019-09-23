@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/Splendid/static/css/main.da0e5485.chunk.css",
+    "main.js": "/Splendid/static/js/main.b1af163d.chunk.js",
+    "main.js.map": "/Splendid/static/js/main.b1af163d.chunk.js.map",
+    "runtime~main.js": "/Splendid/static/js/runtime~main.ae415d3a.js",
+    "runtime~main.js.map": "/Splendid/static/js/runtime~main.ae415d3a.js.map",
+    "static/js/2.cccde682.chunk.js": "/Splendid/static/js/2.cccde682.chunk.js",
+    "static/js/2.cccde682.chunk.js.map": "/Splendid/static/js/2.cccde682.chunk.js.map",
+    "index.html": "/Splendid/index.html",
+    "precache-manifest.150185371f368a71ac044592853399c9.js": "/Splendid/precache-manifest.150185371f368a71ac044592853399c9.js",
+    "service-worker.js": "/Splendid/service-worker.js",
+    "static/css/main.da0e5485.chunk.css.map": "/Splendid/static/css/main.da0e5485.chunk.css.map",
+    "static/media/board.css": "/Splendid/static/media/stock_card.3b7119c9.svg"
+  }
+}
