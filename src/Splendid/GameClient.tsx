@@ -13,7 +13,7 @@ const GameClient = observer<{ settings: GameSettings }>(({ settings }) => {
     ai,
     numPlayers: settings.numberOfPlayers,
     multiplayer: settings.multiplayer,
-    debug: settings.debug
+    debug: settings.debug == null
   } as any);
 
   return <View />;
