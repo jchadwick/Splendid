@@ -3,7 +3,23 @@
   <head>
     <meta charset="utf-8" />
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, 
+    user-scalable=no, initial-scale=1, maximum-scale=1, user-scalable=0"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+
+    <style type="text/css">
+      body {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
     <meta name="theme-color" content="#000000" />
     <meta
       http-equiv="Cache-Control"
@@ -31,6 +47,11 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>React App</title>
+    <style>
+      @-ms-viewport {
+        width: device-width;
+      }
+    </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -45,5 +66,71 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    <script>
+      // namespace our game
+      var POP = {
+        // set up some initial values
+        WIDTH: 320,
+        HEIGHT: 480,
+        // we'll set the rest of these
+        // in the init function
+        RATIO: null,
+        currentWidth: null,
+        currentHeight: null,
+        canvas: null,
+        ctx: null,
+
+        init: function() {
+          // the proportion of width to height
+          POP.RATIO = POP.WIDTH / POP.HEIGHT;
+          // these will change when the screen is resized
+          POP.currentWidth = POP.WIDTH;
+          POP.currentHeight = POP.HEIGHT;
+          // this is our canvas element
+          POP.canvas = document.getElementById("root");
+          // setting this is important
+          // otherwise the browser will
+          // default to 320 x 200
+          POP.canvas.width = POP.WIDTH;
+          POP.canvas.height = POP.HEIGHT;
+          // the canvas context enables us to
+          // interact with the canvas api
+          POP.ctx = POP.canvas.getContext("2d");
+
+          // we're ready to resize
+          POP.resize();
+        },
+
+        resize: function() {
+          POP.currentHeight = window.innerHeight;
+          // resize the width in proportion
+          // to the new height
+          POP.currentWidth = POP.currentHeight * POP.RATIO;
+
+          // this will create some extra space on the
+          // page, allowing us to scroll past
+          // the address bar, thus hiding it.
+          if (POP.android || POP.ios) {
+            document.body.style.height = window.innerHeight + 50 + "px";
+          }
+
+          // set the new canvas style width and height
+          // note: our canvas is still 320 x 480, but
+          // we're essentially scaling it with CSS
+          POP.canvas.style.width = POP.currentWidth + "px";
+          POP.canvas.style.height = POP.currentHeight + "px";
+
+          // we use a timeout here because some mobile
+          // browsers don't fire if there is not
+          // a short delay
+          window.setTimeout(function() {
+            window.scrollTo(0, 1);
+          }, 1);
+        }
+      };
+
+      window.addEventListener("load", POP.init, false);
+      window.addEventListener("resize", POP.resize, false);
+    </script>
   </body>
 </html>

@@ -2,6 +2,12 @@
   cursor: grab;
 }
 
+.debug-ui {
+  position: relative;
+  float: right;
+  margin-left: 0.5em;
+}
+
 [itemprop][data-value]:after {
   content: attr(data-value);
 }
@@ -88,7 +94,7 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  height: 33%;
+  flex-grow: 1;
 }
 
 .card {
@@ -97,8 +103,7 @@
   border: 2px solid black;
   border-radius: 8px;
   color: #000;
-  width: 7rem;
-  height: 10rem;
+  width: 100%;
   margin: 0.3rem;
 }
 

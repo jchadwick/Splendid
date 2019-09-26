@@ -45,29 +45,30 @@ const useStyles = makeStyles(() =>
       color: "#000",
       backgroundColor: "#fff",
       fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-      width: "calc(100% - 310px)",
+      fontSize: "calc(100vw/75)",
       height: "100vh",
       display: "grid",
       gridColumnGap: 5,
       gridRowGap: 5,
-      gridTemplateColumns: "auto 25%",
-      gridTemplateRows: "6em auto 13em",
+      gridTemplateColumns: "auto 6% 25%",
+      gridTemplateRows: "10% auto 30%",
       gridTemplateAreas: `
-        "tokens    player-list"
-        "board     player-list"
-        "inventory player-list"`
+        "board      tokens    player-list"
+        "board      tokens    player-list"
+        "inventory  inventory player-list"`
     },
 
     tokens: {
       gridArea: "tokens",
       display: "flex",
+      flexDirection: "column",
       alignItems: "center",
       justifyContent: "space-around",
 
       "& [itemProp='token']": {
         display: "flex",
         flexDirection: "column",
-        fontSize: "350%"
+        fontSize: "3rem"
       },
 
       "& [itemProp='token'] [itemProp='resource']": {},
@@ -86,7 +87,10 @@ const useStyles = makeStyles(() =>
 
     board: {
       gridArea: "board",
-      padding: "0 1rem 0.5rem"
+      padding: "0 1rem 0.5rem",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "space-evenly"
     },
 
     playerList: {
@@ -234,23 +238,6 @@ export const MainBoard: React.FC<
               player={player}
             />
           ))}
-          <div className={`patronRow`}>
-            <div className="patron card">
-              <span>Patron</span>
-            </div>
-            <div className="patron card">
-              <span>Patron</span>
-            </div>
-            <div className="patron card">
-              <span>Patron</span>
-            </div>
-            <div className="patron card">
-              <span>Patron</span>
-            </div>
-            <div className="patron card">
-              <span>Patron</span>
-            </div>
-          </div>
         </div>
         <div id="inventory" className={classes.inventory}>
           {userPlayer && (
