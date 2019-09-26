@@ -48,10 +48,10 @@ const useStyles = makeStyles(() =>
       fontSize: "calc(100vw/75)",
       height: "100vh",
       display: "grid",
-      gridColumnGap: 5,
-      gridRowGap: 5,
-      gridTemplateColumns: "auto 3rem 25%",
-      gridTemplateRows: "75% 25%",
+      gridColumnGap: "0.4rem",
+      gridRowGap: "0.4rem",
+      gridTemplateColumns: "auto 3rem calc(25% - 0.4rem)",
+      gridTemplateRows: "calc(75% - 0.4rem) 25%",
       gridTemplateAreas: `
         "board      tokens    player-list"
         "inventory  inventory inventory"`

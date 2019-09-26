@@ -1,5 +1,5 @@
 import { importDeck, shuffle, populateVisibleCards } from "../../util";
-import { ResourceCount, Player } from "Model";
+import { Player } from "Model";
 
 export const initializeGame = initial => {
   const players: Player[] = Array(initial.numPlayers)
