@@ -1,6 +1,24 @@
 import { importDeck, shuffle, populateVisibleCards } from "../../util";
+import { ResourceCount, Player } from "Model";
 
 export const initializeGame = initial => {
+  const players: Player[] = Array(initial.numPlayers)
+    .fill(0)
+    .map(
+      (_, id) =>
+        ({
+          id: String(id),
+          name: `Player ${id + 1}`,
+          isHuman: false,
+          patrons: [],
+          playedCards: [],
+          tokens: {},
+          prestigePoints: 0,
+          reservedCards: [],
+          totalResources: {}
+        } as Player)
+    );
+
   const deck = importDeck();
 
   shuffle(deck);
@@ -23,21 +41,14 @@ export const initializeGame = initial => {
     }
   ];
 
-  populateVisibleCards(availableCards);
+  if (process.env.NODE_ENV !== "production") {
+    players[0].tokens.Wild = 1;
+    players[0].tokens.Diamond = 2;
+    players[0].reservedCards.push(availableCards[2].stock.pop());
+    players[0].playedCards.push(availableCards[2].stock.pop());
+  }
 
-  const players = Array(initial.numPlayers)
-    .fill(0)
-    .map((_, id) => ({
-      id: String(id),
-      name: `Player ${id + 1}`,
-      isHuman: false,
-      patrons: [],
-      playedCards: [],
-      tokens: {},
-      prestigePoints: 0,
-      reservedCards: [],
-      totalResources: {}
-    }));
+  populateVisibleCards(availableCards);
 
   const availableTokens = {
     Wild: 7,

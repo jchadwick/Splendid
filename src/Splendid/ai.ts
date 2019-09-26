@@ -22,8 +22,8 @@ class Bot extends MCTSBot {
   constructor(args) {
     super({
       ...args,
-      iterations: 100, // default: 1000
-      playoutDepth: 100, // default: 50
+      iterations: (_, ctx: IGameCtx) => 100 + ctx.turn * 0.1,
+      playoutDepth: (_, ctx: IGameCtx) => 100 + ctx.turn * 0.1,
       objectives: function(
         initialState: GameState,
         _: IGameCtx,

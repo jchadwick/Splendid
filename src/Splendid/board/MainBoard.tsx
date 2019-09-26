@@ -50,12 +50,11 @@ const useStyles = makeStyles(() =>
       display: "grid",
       gridColumnGap: 5,
       gridRowGap: 5,
-      gridTemplateColumns: "auto 6% 25%",
-      gridTemplateRows: "10% auto 30%",
+      gridTemplateColumns: "auto 3rem 25%",
+      gridTemplateRows: "75% 25%",
       gridTemplateAreas: `
         "board      tokens    player-list"
-        "board      tokens    player-list"
-        "inventory  inventory player-list"`
+        "inventory  inventory inventory"`
     },
 
     tokens: {
@@ -64,11 +63,11 @@ const useStyles = makeStyles(() =>
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "space-around",
+      fontSize: "1.9rem",
 
       "& [itemProp='token']": {
         display: "flex",
-        flexDirection: "column",
-        fontSize: "3rem"
+        flexDirection: "column"
       },
 
       "& [itemProp='token'] [itemProp='resource']": {},
@@ -87,7 +86,6 @@ const useStyles = makeStyles(() =>
 
     board: {
       gridArea: "board",
-      padding: "0 1rem 0.5rem",
       display: "flex",
       flexDirection: "column",
       justifyContent: "space-evenly"
@@ -132,6 +130,8 @@ export const MainBoard: React.FC<
   const isUserPlayersTurn = userPlayerId === currentPlayerId;
 
   useEffect(() => {
+    setSelectedTokens([]);
+
     if (currentPlayerId !== userPlayerId) {
       step();
     }
@@ -394,14 +394,21 @@ const UserPlayerInventory = ({
   player: Player;
   onPlayReservedCard(card: DevelopmentCardModel): void;
 }) => (
-  <Row position="relative" flexGrow={1} className={isCurrentPlayer && "active"}>
-    <Box className="prestigePoints" position="absolute" top="1rem" right="1rem">
-      {player.prestigePoints}
-    </Box>
+  <Row
+    position="relative"
+    flexGrow={1}
+    className={isCurrentPlayer ? "active" : ""}
+  >
     <CurrentPlayerName>{player.name}</CurrentPlayerName>
-    <Row>
+    <Row flexGrow={1}>
       <Row border="1px solid #333">
-        <Row id="playerTokens" fontSize="160%" flexWrap="wrap" width="5rem">
+        <Column
+          id="playerTokens"
+          fontSize="140%"
+          flexWrap="wrap"
+          width="4rem"
+          padding=".4rem .2rem"
+        >
           {Object.keys(player.tokens).map(
             resource =>
               player.tokens[resource] > 0 && (
@@ -411,8 +418,8 @@ const UserPlayerInventory = ({
                 </div>
               )
           )}
-        </Row>
-        <Row id="reservedCards">
+        </Column>
+        <Row id="reservedCards" flexGrow={1}>
           {player.reservedCards.map(card => (
             <DevelopmentCard
               key={card.id}
@@ -422,33 +429,35 @@ const UserPlayerInventory = ({
           ))}
         </Row>
       </Row>
-      <Row>
-        <Row id="playedCards">
-          {groupCards(player.playedCards).map(({ resourceType, cards }) => (
-            <Box
-              className={`cardStack ${resourceType}`}
-              position="relative"
-              width="9em"
-            >
-              {cards.map((card, idx) => (
-                <Box
-                  position="absolute"
-                  top={`${idx * 3}em`}
-                  width="7em"
-                  paddingRight="1em"
-                >
-                  <DevelopmentCard
-                    key={card.id}
-                    card={card}
-                    onSelected={() => null}
-                  />
-                </Box>
-              ))}
-            </Box>
-          ))}
-        </Row>
+      <Row id="playedCards" flexGrow={1} height="100%">
+        {groupCards(player.playedCards).map(({ resourceType, cards }) => (
+          <Column
+            className={`cardStack ${resourceType}`}
+            width="5rem"
+            position="relative"
+          >
+            {cards.map((card, idx) => (
+              <Row
+                position="absolute"
+                top={`${idx * 3}em`}
+                width="7em"
+                height="100%"
+                paddingRight="1em"
+              >
+                <DevelopmentCard
+                  key={card.id}
+                  card={card}
+                  onSelected={() => null}
+                />
+              </Row>
+            ))}
+          </Column>
+        ))}
       </Row>
     </Row>
+    <Box className="prestigePoints" width="1rem">
+      {player.prestigePoints}
+    </Box>
   </Row>
 );
 
