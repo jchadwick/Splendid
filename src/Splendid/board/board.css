@@ -37,21 +37,24 @@
   padding: 0.1em;
 }
 
-[itemprop="resource"][data-value="Diamond"] {
+[itemprop="resource"][data-value="Diamond"],
+.cardStack.Diamond {
   background-color: bisque;
 }
 [itemprop="resource"][data-value="Diamond"]:after {
   content: "\2126";
 }
 
-[itemprop="resource"][data-value="Emerald"] {
+[itemprop="resource"][data-value="Emerald"],
+.cardStack.Emerald {
   background-color: greenyellow;
 }
 [itemprop="resource"][data-value="Emerald"]:after {
   content: "\2600";
 }
 
-[itemprop="resource"][data-value="Sapphire"] {
+[itemprop="resource"][data-value="Sapphire"],
+.cardStack.Sapphire {
   background-color: lightskyblue;
   color: #fff;
 }
@@ -59,7 +62,8 @@
   content: "\271C";
 }
 
-[itemprop="resource"][data-value="Onyx"] {
+[itemprop="resource"][data-value="Onyx"],
+.cardStack.Onyx {
   background-color: black;
   color: #fff;
 }
@@ -67,7 +71,8 @@
   content: "\2726";
 }
 
-[itemprop="resource"][data-value="Ruby"] {
+[itemprop="resource"][data-value="Ruby"],
+.cardStack.Ruby {
   background-color: red;
   color: #fff;
 }
@@ -75,7 +80,8 @@
   content: "\2726";
 }
 
-[itemprop="resource"][data-value="Wild"] {
+[itemprop="resource"][data-value="Wild"],
+.cardStack.Wild {
   background: rgb(34, 193, 195);
   background: radial-gradient(
     circle,
@@ -99,6 +105,7 @@
 
 .card {
   position: relative;
+  padding: 0 1.5rem;
   background-color: #e0f3f7;
   border: 2px solid black;
   border-radius: 8px;
@@ -132,7 +139,8 @@
   height: 70%;
   display: flex;
   flex-wrap: wrap;
-  flex-direction: column-reverse;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 
 .stock {
@@ -171,6 +179,15 @@
   border: 1px solid #3f3f3f;
   margin: 0.5em;
   padding: 0.5em;
+}
+
+.cardStack {
+  margin: 0.2em;
+  border: 1px solid #333;
+  border-radius: 0.1em;
+  padding: 0 0.3em;
+  justify-content: center;
+  align-items: center;
 }
 
 .active {

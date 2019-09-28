@@ -22,7 +22,9 @@ export const DevelopmentCard = ({
     <div itemProp="cost">
       {card &&
         card.cost &&
-        Object.keys(card.cost.tokens).map(resource => (
+        Model.AllResourceTypes.filter(
+          resource => card.cost.tokens[resource] > 0
+        ).map(resource => (
           <div key={resource} itemProp="token">
             <div itemProp="resource" data-value={resource} />
             <div itemProp="count" data-value={card.cost.tokens[resource]} />

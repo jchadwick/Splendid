@@ -25,6 +25,14 @@ export const UserPlayerInventory = ({
     className={isCurrentPlayer ? "active" : ""}
   >
     <CurrentPlayerName>{player.name}</CurrentPlayerName>
+    <Box
+      className="prestigePoints"
+      width="2rem"
+      fontSize="150%"
+      fontWeight="800"
+    >
+      {player.prestigePoints}
+    </Box>
     <Row flexGrow={1}>
       <Row border="1px solid #333">
         <Column
@@ -34,7 +42,9 @@ export const UserPlayerInventory = ({
           width="4rem"
           padding=".4rem .2rem"
         >
-          {Object.keys(player.tokens).map(
+          {Model.AllResourceTypes.filter(
+            resource => player.tokens[resource] > 0
+          ).map(
             resource =>
               player.tokens[resource] > 0 && (
                 <div key={resource} itemProp="token">
@@ -60,29 +70,16 @@ export const UserPlayerInventory = ({
             className={`cardStack ${resourceType}`}
             width="5rem"
             position="relative"
+            fontSize="5em"
+            fontWeight={600}
+            justifyContent="center"
+            alignContent="center"
           >
-            {cards.map((card, idx) => (
-              <Row
-                position="absolute"
-                top={`${idx * 3}em`}
-                width="7em"
-                height="100%"
-                paddingRight="1em"
-              >
-                <DevelopmentCard
-                  key={card.id}
-                  card={card}
-                  onSelected={() => null}
-                />
-              </Row>
-            ))}
+            {cards.length}
           </Column>
         ))}
       </Row>
     </Row>
-    <Box className="prestigePoints" width="1rem">
-      {player.prestigePoints}
-    </Box>
   </Row>
 );
 

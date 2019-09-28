@@ -1,10 +1,10 @@
 import { AI, MCTSBot } from "boardgame.io/ai";
 import { MCTSVisualizer } from "boardgame.io/ai-visualize";
-import { getAvailableMoves } from "./game/moves";
-import { GameState } from "Model";
 import { IGameCtx } from "boardgame.io/core";
+import { GameState } from "Model";
 import { findPlayer } from "../util";
 import { AIVisualizer } from "./AIVisualizer";
+import { getAvailableMoves } from "./game/moves";
 
 const objective = (
   multiplier: number,
@@ -22,8 +22,8 @@ class Bot extends MCTSBot {
   constructor(args) {
     super({
       ...args,
-      iterations: (_, ctx: IGameCtx) => 100 + ctx.turn * 0.1,
-      playoutDepth: (_, ctx: IGameCtx) => 100 + ctx.turn * 0.1,
+      iterations: (_, ctx: IGameCtx) => 100 + ctx.turn * 2,
+      playoutDepth: (_, ctx: IGameCtx) => 50,
       objectives: function(
         initialState: GameState,
         _: IGameCtx,
