@@ -119,10 +119,10 @@
 
 .card > [itemprop="prestigePoints"] {
   position: absolute;
-  top: 0.3rem;
-  left: 40%;
+  top: 0;
+  right: 1rem;
   font-weight: 700;
-  font-size: 200%;
+  font-size: 220%;
 }
 
 .card > [itemprop="resource"] {
@@ -133,7 +133,7 @@
   position: absolute;
   left: 0.3em;
   bottom: 0.3em;
-  min-width: 2rem;
+  min-width: 3rem;
   max-height: 70%;
   padding: 0.4em 0.2em;
   border-radius: 0.3rem;
