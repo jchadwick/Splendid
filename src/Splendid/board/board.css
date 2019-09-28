@@ -38,7 +38,7 @@
 }
 
 [itemprop="resource"][data-value="Diamond"],
-.cardStack.Diamond {
+.Diamond {
   background-color: bisque;
 }
 [itemprop="resource"][data-value="Diamond"]:after {
@@ -46,7 +46,7 @@
 }
 
 [itemprop="resource"][data-value="Emerald"],
-.cardStack.Emerald {
+.Emerald {
   background-color: greenyellow;
 }
 [itemprop="resource"][data-value="Emerald"]:after {
@@ -54,7 +54,7 @@
 }
 
 [itemprop="resource"][data-value="Sapphire"],
-.cardStack.Sapphire {
+.Sapphire {
   background-color: lightskyblue;
   color: #fff;
 }
@@ -62,8 +62,11 @@
   content: "\271C";
 }
 
+.Onyx.card > [itemprop="prestigePoints"] {
+  color: #fff;
+}
 [itemprop="resource"][data-value="Onyx"],
-.cardStack.Onyx {
+.Onyx {
   background-color: black;
   color: #fff;
 }
@@ -72,7 +75,7 @@
 }
 
 [itemprop="resource"][data-value="Ruby"],
-.cardStack.Ruby {
+.Ruby {
   background-color: red;
   color: #fff;
 }
@@ -81,7 +84,7 @@
 }
 
 [itemprop="resource"][data-value="Wild"],
-.cardStack.Wild {
+.Wild {
   background: rgb(34, 193, 195);
   background: radial-gradient(
     circle,
@@ -106,7 +109,6 @@
 .card {
   position: relative;
   padding: 0 1.5rem;
-  background-color: #e0f3f7;
   border: 2px solid black;
   border-radius: 8px;
   color: #000;
@@ -118,36 +120,35 @@
 .card > [itemprop="prestigePoints"] {
   position: absolute;
   top: 0.3rem;
-  left: 1rem;
+  left: 40%;
   font-weight: 700;
-  font-size: 150%;
+  font-size: 200%;
 }
 
 .card > [itemprop="resource"] {
-  position: absolute;
-  top: 0.3em;
-  right: 0.3em;
-  font-weight: 500;
-  font-size: 150%;
+  display: none;
 }
 
 .card [itemprop="cost"] {
   position: absolute;
   left: 0.3em;
   bottom: 0.3em;
-  min-width: 3rem;
-  height: 70%;
+  min-width: 2rem;
+  max-height: 70%;
+  padding: 0.4em 0.2em;
+  border-radius: 0.3rem;
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
   justify-content: flex-end;
+  background-color: #fff;
 }
 
 .stock {
-  background: no-repeat center/95% url(./stock_card.svg);
-  background-color: #fff;
-  color: lightgreen;
+  color: #3c3c3c;
+  background-color: #ccc;
   font-weight: bold;
+  font-style: italic;
   display: flex;
   flex-direction: column;
   justify-content: center;

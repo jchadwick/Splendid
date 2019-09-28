@@ -11,7 +11,9 @@ export const DevelopmentCard = ({
   onSelected(card: Model.DevelopmentCard): void;
 }) => (
   <div
-    className={`card ${card.id || canSelect ? "valid-action" : ""}`}
+    className={`card ${card.id || canSelect ? "valid-action" : ""} ${
+      card.resourceType
+    }`}
     itemProp="card"
     onClick={() => (card.id || canSelect ? onSelected(card) : false)}
   >
