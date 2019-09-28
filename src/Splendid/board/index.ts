@@ -1,1 +1,1 @@
-export { MainBoard as default } from "./MainBoard";
+export { GameLayout as default } from "./GameLayout";

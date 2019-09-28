@@ -1,6 +1,6 @@
+import { Box, Card, Grid, makeStyles } from "@material-ui/core";
 import React from "react";
 import * as Model from "../../Model";
-import { Grid, Card, Box, makeStyles } from "@material-ui/core";
 
 interface DevelopmentCardsSectionProps extends OnDevelopmentCardSelected {
   levels: Model.DevelopmentCardRow[];
@@ -62,7 +62,7 @@ interface DevelopmentCardProps extends OnDevelopmentCardSelected {
   card: Model.DevelopmentCard;
 }
 
-export const DevelopmentCard: React.FC<DevelopmentCardProps> = props => (
+const DevelopmentCard: React.FC<DevelopmentCardProps> = props => (
   <Card
     className={useCardStyle(props).card}
     onClick={() =>
