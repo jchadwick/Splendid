@@ -1,9 +1,7 @@
 import { AI, MCTSBot } from "boardgame.io/ai";
-import { MCTSVisualizer } from "boardgame.io/ai-visualize";
 import { IGameCtx } from "boardgame.io/core";
 import { GameState } from "Model";
 import { findPlayer } from "../util";
-import { AIVisualizer } from "./AIVisualizer";
 import { getAvailableMoves } from "./game/moves";
 
 const objective = (
@@ -55,6 +53,5 @@ class Bot extends MCTSBot {
 
 export default AI({
   bot: Bot,
-  enumerate: getAvailableMoves,
-  visualize: MCTSVisualizer(AIVisualizer)
+  enumerate: getAvailableMoves
 });

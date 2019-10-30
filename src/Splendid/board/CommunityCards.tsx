@@ -2,7 +2,7 @@ import React from "react";
 import * as Model from "../../Model";
 import { DevelopmentCard } from "./DevelopmentCard";
 
-export const MainBoard = ({ availableCards, selectDevelopmentCard }) => (
+export const CommunityCards = ({ availableCards, selectDevelopmentCard }) => (
   <>
     {availableCards.map((row, rowIndex) => (
       <div key={String(rowIndex)} className="cardRow">
