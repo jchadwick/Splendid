@@ -7,7 +7,7 @@ const SplendidGame = observer(() => {
     <GameClient
       settings={{
         debug: process.env.NODE_ENV !== "production",
-        numberOfPlayers: 2,
+        numberOfPlayers: 4,
         musicVolume: 0,
         sfxVolume: 0,
         players: []

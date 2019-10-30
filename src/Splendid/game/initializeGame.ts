@@ -44,8 +44,22 @@ export const initializeGame = initial => {
   if (process.env.NODE_ENV !== "production") {
     players[0].tokens.Wild = 1;
     players[0].tokens.Diamond = 2;
-    players[0].reservedCards.push(availableCards[2].stock.pop());
-    players[0].playedCards.push(availableCards[2].stock.pop());
+    new Array(4).fill(0).forEach(() => {
+      players[0].reservedCards.push(availableCards[2].stock.pop());
+    });
+    new Array(4).fill(0).forEach(() => {
+      players[0].playedCards.push(availableCards[2].stock.pop());
+    });
+
+    players[1].tokens.Wild = 3;
+    players[1].tokens.Sapphire = 3;
+    players[1].tokens.Ruby = 2;
+    new Array(4).fill(0).forEach(() => {
+      players[1].reservedCards.push(availableCards[2].stock.pop());
+    });
+    new Array(4).fill(0).forEach(() => {
+      players[1].playedCards.push(availableCards[2].stock.pop());
+    });
   }
 
   populateVisibleCards(availableCards);

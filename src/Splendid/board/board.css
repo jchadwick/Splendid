@@ -62,13 +62,18 @@
   content: "\271C";
 }
 
-.Onyx.card > [itemprop="prestigePoints"] {
+.Onyx.card {
+  border: 1px #ccc solid;
+}
+[itemprop="resource"][data-value="Onyx"] + [itemprop="count"],
+[itemprop="resource"][data-value="Onyx"],
+.Onyx.card > [itemprop="prestigePoints"],
+.Onyx {
   color: #fff;
 }
 [itemprop="resource"][data-value="Onyx"],
 .Onyx {
   background-color: black;
-  color: #fff;
 }
 [itemprop="resource"][data-value="Onyx"]:after {
   content: "\2726";
@@ -99,6 +104,18 @@
   content: "\2738";
 }
 
+[itemProp="token"] {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+}
+
+[itemProp="token"] [itemProp="count"] {
+  position: absolute;
+  font-size: 80%;
+}
+
 .cardRow {
   display: flex;
   flex-direction: row;
@@ -120,7 +137,7 @@
 .card > [itemprop="prestigePoints"] {
   position: absolute;
   top: 0;
-  right: 1rem;
+  left: 1rem;
   font-weight: 700;
   font-size: 220%;
 }
@@ -133,7 +150,7 @@
   position: absolute;
   left: 0.3em;
   bottom: 0.3em;
-  min-width: 3rem;
+  min-width: 2rem;
   max-height: 70%;
   padding: 0.4em 0.2em;
   border-radius: 0.3rem;
@@ -183,12 +200,14 @@
 }
 
 .cardStack {
-  margin: 0.2em;
+  margin: 0em 0.15em;
   border: 1px solid #333;
   border-radius: 0.1em;
   padding: 0 0.3em;
   justify-content: center;
   align-items: center;
+  position: relative;
+  font-weight: 600;
 }
 
 .active {
@@ -225,6 +244,11 @@
   flex-wrap: wrap;
 }
 
+.user-player .empty,
+.player .empty {
+  visibility: hidden;
+}
+
 .player [itemprop="name"] {
   font-weight: bold;
   font-size: 150%;
@@ -232,14 +256,16 @@
 }
 
 .player [itemprop="token"] {
-  font-size: 140%;
-  margin: 0 0.5em;
+  font-size: 2.5em;
+  margin: 0.32em;
+}
+.player [itemprop="token"] [itemprop="count"] {
+  font-size: 0.8em;
 }
 
-.player [itemprop="token"] [itemprop="resource"] {
-  width: 2em;
-  height: 2em;
-  margin: 0.2em;
+.player [itemprop="token"] > [itemprop="count"][data-value="0"] {
+  background-color: transparent;
+  border: transparent;
 }
 
 .player [itemprop="prestigePoints"] {

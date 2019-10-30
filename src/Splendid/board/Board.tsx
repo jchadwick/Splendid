@@ -43,22 +43,8 @@ const useStyles = makeStyles(() =>
       justifyContent: "space-around",
       fontSize: "1.9rem",
 
-      "& [itemProp='token']": {
-        display: "flex",
-        flexDirection: "column"
-      },
-
-      "& [itemProp='token'] [itemProp='resource']": {},
-
       "& [itemProp='token'] [itemProp='count']": {
-        position: "absolute",
-        padding: ".4em",
-        fontSize: "60%",
         fontWeight: 900
-      },
-
-      "& [itemprop='resource'][data-value='Onyx'] + [itemProp='count']": {
-        color: "#fff"
       }
     },
 
@@ -120,13 +106,13 @@ export const Board = (props: Partial<IBoardProps<Model.GameState, Moves>>) => {
     function onCurrentPlayerChanged() {
       setSelectedTokens([]);
 
-      if (currentPlayer && !currentPlayer.isHuman) {
+      if (!isUserPlayersTurn && currentPlayer && !currentPlayer.isHuman) {
         // take the AI player's turn
         step();
         return;
       }
     },
-    [step, currentPlayer]
+    [step, currentPlayer, isUserPlayersTurn]
   );
 
   const selectToken = useCallback(
@@ -217,7 +203,7 @@ export const Board = (props: Partial<IBoardProps<Model.GameState, Moves>>) => {
 const MessageDialog = ({ message }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  useEffect(() => setIsOpen(message && message.length), [message]);
+  useEffect(() => setIsOpen(message && message.length > 0), [message]);
 
   return (
     <Snackbar
@@ -256,7 +242,7 @@ const BoardLayout = ({
   return (
     <div id="container" className={classes.container}>
       <div id="tokens" className={classes.tokens}>
-        <Tokens availableTokens={availableTokens} selectToken={selectToken} />
+        <Tokens tokens={availableTokens} selectToken={selectToken} />
       </div>
       <div id="board" className={classes.board}>
         <CommunityCards

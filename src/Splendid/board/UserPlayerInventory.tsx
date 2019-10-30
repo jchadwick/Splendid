@@ -4,10 +4,23 @@ import React from "react";
 import * as Model from "../../Model";
 import { Column, Row } from "./components";
 import { DevelopmentCard } from "./DevelopmentCard";
+import { GroupedDevelopmentCards } from "./GroupedDevelopmentCards";
+import { Tokens } from "./Tokens";
+import clsx from "clsx";
 
 const CurrentPlayerName = styled("h3")({
   writingMode: "vertical-lr",
   textOrientation: "upright"
+});
+
+const ReservedCards = styled(Row)({
+  flexGrow: 1,
+  "& > div:not(:first-child)": {
+    marginLeft: "-3rem"
+  },
+  maxWidth: "15em",
+  padding: "0 0.5rem",
+  overflowY: "auto"
 });
 
 export const UserPlayerInventory = ({
@@ -22,7 +35,7 @@ export const UserPlayerInventory = ({
   <Row
     position="relative"
     flexGrow={1}
-    className={isCurrentPlayer ? "active" : ""}
+    className={clsx("user-player", { active: isCurrentPlayer })}
   >
     <CurrentPlayerName>{player.name}</CurrentPlayerName>
     <Box
@@ -36,25 +49,14 @@ export const UserPlayerInventory = ({
     <Row flexGrow={1}>
       <Row border="1px solid #333">
         <Column
-          id="playerTokens"
-          fontSize="140%"
-          flexWrap="wrap"
-          width="4rem"
-          padding=".4rem .2rem"
+          fontSize="calc(100% + .5rem/6)"
+          alignItems="center"
+          width="3rem"
+          padding="1rem 0"
         >
-          {Model.AllResourceTypes.filter(
-            resource => player.tokens[resource] > 0
-          ).map(
-            resource =>
-              player.tokens[resource] > 0 && (
-                <div key={resource} itemProp="token">
-                  <div itemProp="resource" data-value={resource} />
-                  <div itemProp="count" data-value={player.tokens[resource]} />
-                </div>
-              )
-          )}
+          <Tokens tokens={player.tokens} />
         </Column>
-        <Row id="reservedCards" flexGrow={1}>
+        <ReservedCards>
           {player.reservedCards.map(card => (
             <DevelopmentCard
               key={card.id}
@@ -62,42 +64,11 @@ export const UserPlayerInventory = ({
               onSelected={onPlayReservedCard}
             />
           ))}
-        </Row>
+        </ReservedCards>
       </Row>
-      <Row id="playedCards" flexGrow={1} height="100%">
-        {groupCards(player.playedCards).map(({ resourceType, cards }) => (
-          <Column
-            className={`cardStack ${resourceType}`}
-            width="5rem"
-            position="relative"
-            fontSize="5em"
-            fontWeight={600}
-            justifyContent="center"
-            alignContent="center"
-          >
-            {cards.length}
-          </Column>
-        ))}
+      <Row fontSize="5em">
+        <GroupedDevelopmentCards cards={player.playedCards} />
       </Row>
     </Row>
   </Row>
 );
-
-type DevelopmentCardGroup = {
-  resourceType: Model.ResourceType;
-  cards: Model.DevelopmentCard[];
-};
-
-const groupCards = (cards: Model.DevelopmentCard[]): DevelopmentCardGroup[] =>
-  cards.reduce((grouped: DevelopmentCardGroup[], card) => {
-    const { resourceType } = card;
-    let group = grouped.find(x => x.resourceType === resourceType);
-
-    if (group == null) {
-      grouped.push({ resourceType, cards: [card] });
-    } else {
-      group.cards.push(card);
-    }
-
-    return grouped;
-  }, []);
