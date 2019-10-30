@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/Splendid/static/css/main.fbca9b21.chunk.css",
-    "main.js": "/Splendid/static/js/main.c82c529c.chunk.js",
-    "main.js.map": "/Splendid/static/js/main.c82c529c.chunk.js.map",
+    "main.css": "/Splendid/static/css/main.cb237e7d.chunk.css",
+    "main.js": "/Splendid/static/js/main.44b21cfb.chunk.js",
+    "main.js.map": "/Splendid/static/js/main.44b21cfb.chunk.js.map",
     "runtime~main.js": "/Splendid/static/js/runtime~main.ae415d3a.js",
     "runtime~main.js.map": "/Splendid/static/js/runtime~main.ae415d3a.js.map",
-    "static/js/2.540ed8a3.chunk.js": "/Splendid/static/js/2.540ed8a3.chunk.js",
-    "static/js/2.540ed8a3.chunk.js.map": "/Splendid/static/js/2.540ed8a3.chunk.js.map",
+    "static/js/2.f7e2fcea.chunk.js": "/Splendid/static/js/2.f7e2fcea.chunk.js",
+    "static/js/2.f7e2fcea.chunk.js.map": "/Splendid/static/js/2.f7e2fcea.chunk.js.map",
     "index.html": "/Splendid/index.html",
-    "precache-manifest.e7f295ef5161035e9a9bd952e306a1c8.js": "/Splendid/precache-manifest.e7f295ef5161035e9a9bd952e306a1c8.js",
+    "precache-manifest.71423bb9475c9eb6a4c302bbf8eb3286.js": "/Splendid/precache-manifest.71423bb9475c9eb6a4c302bbf8eb3286.js",
     "service-worker.js": "/Splendid/service-worker.js",
-    "static/css/main.fbca9b21.chunk.css.map": "/Splendid/static/css/main.fbca9b21.chunk.css.map"
+    "static/css/main.cb237e7d.chunk.css.map": "/Splendid/static/css/main.cb237e7d.chunk.css.map"
   }
 }
